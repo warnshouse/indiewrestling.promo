@@ -1,0 +1,19 @@
+<%- include('partials/header') -%>
+    <div class="container">
+      <div class="row justify-content-center mt-5">
+        <ul class="row list-unstyled">
+          <% for (let i = 0; i < promos.length; i++) {%>
+          <li class="col-6 justify-content-between mt-5">
+            <a href="/promos/promo/<%= promos[i]._id %>">
+              <!-- <img class="img-fluid" src="<%= promos[i].image %>"> -->
+              <%= promos[i].name %>
+            </a>
+          </li>
+          <% } %>
+        </ul>
+      </div>
+      <% if (user) { %>
+      <a class="btn btn-primary" href="/promos/add">Add a promotion</a>
+      <% } %>
+    </div>
+<%- include('partials/footer') -%>

@@ -1,7 +1,19 @@
 const mongoose = require("mongoose");
 
-const PostSchema = new mongoose.Schema({
-  title: {
+const PromotionSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+  state: {
+    type: String,
+    required: true,
+  },
+  description: {
     type: String,
     required: true,
   },
@@ -13,22 +25,18 @@ const PostSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  caption: {
-    type: String,
-    required: true,
-  },
-  likes: {
+  followers: {
     type: Number,
     required: true,
   },
-  user: {
+  addedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  createdAt: {
+  addedAt: {
     type: Date,
     default: Date.now,
   }
 });
 
-module.exports = mongoose.model("Post", PostSchema);
+module.exports = mongoose.model("Promotion", PromotionSchema);
