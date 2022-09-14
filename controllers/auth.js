@@ -6,7 +6,7 @@ exports.getLogin = (req, res) => {
   if (req.user) {
     return res.redirect("/profile");
   }
-  res.render("login", {
+  res.render("auth/login.ejs", {
     title: "Login",
     user: req.user
   });
@@ -70,7 +70,7 @@ exports.getSignup = (req, res) => {
   if (req.user) {
     return res.redirect("/profile");
   }
-  res.render("signup", {
+  res.render("auth/signup.ejs", {
     title: "Create Account",
     user: req.user
   });

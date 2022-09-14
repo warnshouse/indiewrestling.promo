@@ -5,7 +5,7 @@ module.exports = {
   getPromos: async (req, res) => {
     try {
       const promos = await Promotion.find().sort({ addedAt: "desc" }).lean();
-      res.render("listing.ejs", { promos: promos, user: req.user });
+      res.render("promos/listing.ejs", { promos: promos, user: req.user });
     } catch (err) {
       console.log(err);
     }
@@ -13,14 +13,14 @@ module.exports = {
   getPromo: async (req, res) => {
     try {
       const promo = await Promotion.findById(req.params.id);
-      res.render("promo.ejs", { promo: promo, user: req.user });
+      res.render("promos/promo.ejs", { promo: promo, user: req.user });
     } catch (err) {
       console.log(err);
     }
   },
   getForm: (req, res) => {
     try {
-      res.render("add.ejs", { user: req.user });
+      res.render("promos/add.ejs", { user: req.user });
     } catch (err) {
       console.log(err);
     }
