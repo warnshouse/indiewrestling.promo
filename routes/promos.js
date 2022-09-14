@@ -7,7 +7,7 @@ const authMiddleware = require("../middleware/auth");
 //Promotion Routes - simplified for now
 router.get("/", promosController.getPromos);
 router.get("/promo/:id", promosController.getPromo);
-router.get("/add", authMiddleware.ensureAuth, promosController.getForm);
-router.post("/add", authMiddleware.ensureAuth, upload.single("file"), promosController.postForm);
+router.get("/add", authMiddleware.ensureOwner, promosController.getForm);
+router.post("/add", authMiddleware.ensureOwner, upload.single("file"), promosController.postForm);
 
 module.exports = router;

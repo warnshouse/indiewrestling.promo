@@ -1,10 +1,18 @@
 const bcrypt = require("bcrypt");
+const { ObjectId } = require("mongodb");
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
   userName: { type: String, unique: true },
   email: { type: String, unique: true },
-  password: String
+  password: String,
+  isFan: { type: Boolean, default: true },
+  isWrestler: { type: Boolean, default: false },
+  isOwner: { type: Boolean, default: false },
+  followedUsers: [{ type: ObjectId, ref: 'User' }],
+  followedPromos: [{ type: ObjectId, ref: 'Promotion' }],
+  withPromos: [{ type: ObjectId, ref: 'Promotion' }],
+  joinedOn: { type: Date, default: Date.now }
 });
 
 // Password hash middleware

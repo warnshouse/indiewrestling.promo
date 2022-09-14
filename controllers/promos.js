@@ -38,7 +38,7 @@ module.exports = {
         image: result.secure_url,
         cloudinaryId: result.public_id,
         followers: 0,
-        addedBy: req.user.id
+        ownedBy: req.user.id
       });
       console.log("Promotion has been added!");
       res.redirect("/promos");

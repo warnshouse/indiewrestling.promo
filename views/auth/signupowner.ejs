@@ -12,7 +12,7 @@
               <div class="alert alert-info"><%= el.msg %></div>
             <% }) %>    
           <% } %>
-          <form action="/auth/signup" method="POST">
+          <form action="/auth/signup/o" method="POST">
             <div class="mb-3">
               <label for="userName" class="form-label">User Name</label>
               <input type="text" class="form-control" id="userName" name="userName">
@@ -32,6 +32,10 @@
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
+        </section>
+        <section class="col-6 mt-5">
+        <a class="btn btn-primary" href="/auth/signup">Create Fan Account</a>
+        <a class="btn btn-primary" href="/auth/signup/w">Create Wrestler Account</a>
         </section>
       </div>
     </main>
