@@ -12,30 +12,27 @@
               <div class="alert alert-info"><%= el.msg %></div>
             <% }) %>    
           <% } %>
-          <form action="/signup" method="POST">
+          <h2>Request a Wrestler or Promotion Owner Account</h2>
+          <form action="/request" method="POST">
             <div class="mb-3">
-              <label for="userName" class="form-label">User Name</label>
+              <label for="userName" class="form-label">Your Full Name:</label>
               <input type="text" class="form-control" id="userName" name="userName">
             </div>
             <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email">
+              <label for="userEmail" class="form-label">Email address:</label>
+              <input type="email" class="form-control" id="userEmail" aria-describedby="emailHelp" name="userEmail">
               <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
             </div>
             <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" name="password">
+              <label for="userSubject" class="form-label">Subject:</label>
+              <input type="text" class="form-control" id="userSubject" name="userSubject">
             </div>
             <div class="mb-3">
-              <label for="confirmPassword" class="form-label">Confirm Password</label>
-              <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+              <label for="userMessage" class="form-label">Message:</label>
+              <textarea class="form-control" id="userMessage" name="userMessage"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
-        </section>
-        <section class="col-6 mt-5">
-        <a class="btn btn-primary" href="/w/signup">Create Wrestler Account</a>
-        <a class="btn btn-primary" href="/o/signup">Create Promotion Owner Account</a>
         </section>
       </div>
     </main>

@@ -14,11 +14,9 @@ router.get("/feed", authMiddleware.ensureAuth, postsController.getFeed);
 router.get("/login", authMiddleware.ensureGuest, authController.getLogin);
 router.post("/login", authMiddleware.ensureGuest, authController.postLogin);
 router.get("/logout", authMiddleware.ensureAuth, authController.logout);
-router.get("/signup", authMiddleware.ensureGuest, authController.getFanSignup);
-router.get("/o/signup", authMiddleware.ensureGuest, authController.getOwnerSignup);
-router.get("/w/signup", authMiddleware.ensureGuest, authController.getWrestlerSignup);
-router.post("/signup", authMiddleware.ensureGuest, authController.postFanSignup);
-router.post("/o/signup", authMiddleware.ensureGuest, authController.postOwnerSignup);
-router.post("/w/signup", authMiddleware.ensureGuest, authController.postWrestlerSignup);
+router.get("/signup", authMiddleware.ensureGuest, authController.getSignup);
+router.post("/signup", authMiddleware.ensureGuest, authController.postSignup);
+router.get("/request", authController.getRequestForm);
+router.post("/request", authController.postRequestForm);
 
 module.exports = router;

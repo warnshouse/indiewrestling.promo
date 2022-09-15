@@ -12,7 +12,7 @@
               <div class="alert alert-info"><%= el.msg %></div>
             <% }) %>    
           <% } %>
-          <form action="/o/signup" method="POST">
+          <form action="/signup" method="POST">
             <div class="mb-3">
               <label for="userName" class="form-label">User Name</label>
               <input type="text" class="form-control" id="userName" name="userName">
@@ -34,8 +34,7 @@
           </form>
         </section>
         <section class="col-6 mt-5">
-        <a class="btn btn-primary" href="/signup">Create Fan Account</a>
-        <a class="btn btn-primary" href="/w/signup">Create Wrestler Account</a>
+        <a class="btn btn-outline-danger me-2" href="/request">Request a Wrestler or Promotion Owner Account</a>
         </section>
       </div>
     </main>

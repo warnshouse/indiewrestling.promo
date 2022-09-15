@@ -1,5 +1,6 @@
 const passport = require("passport");
 const validator = require("validator");
+const nodeMailer = require("nodemailer");
 const User = require("../models/User");
 
 exports.getLogin = (req, res) => {
@@ -56,37 +57,17 @@ exports.logout = (req, res) => {
   });
 };
 
-exports.getFanSignup = (req, res) => {
+exports.getSignup = (req, res) => {
   if (req.user) {
     return res.redirect("/profile");
   }
-  res.render("auth/signupfan.ejs", {
+  res.render("auth/signup.ejs", {
     title: "Create Fan Account",
     user: req.user
   });
 };
 
-exports.getOwnerSignup = (req, res) => {
-  if (req.user) {
-    return res.redirect("/profile");
-  }
-  res.render("auth/signupowner.ejs", {
-    title: "Create Promotion Owner Account",
-    user: req.user
-  });
-};
-
-exports.getWrestlerSignup = (req, res) => {
-  if (req.user) {
-    return res.redirect("/profile");
-  }
-  res.render("auth/signupwrestler.ejs", {
-    title: "Create Wrestler Account",
-    user: req.user
-  });
-};
-
-exports.postFanSignup = (req, res, next) => {
+exports.postSignup = (req, res, next) => {
   const validationErrors = [];
   if (!validator.isLength(req.body.userName, { min: 2 }))
     validationErrors.push({ msg: "User name must be at least 2 characters long." });
@@ -142,120 +123,63 @@ exports.postFanSignup = (req, res, next) => {
   );
 };
 
-exports.postOwnerSignup = (req, res, next) => {
-  const validationErrors = [];
-  if (!validator.isLength(req.body.userName, { min: 2 }))
-    validationErrors.push({ msg: "User name must be at least 2 characters long." });
-  if (!validator.isEmail(req.body.email))
-    validationErrors.push({ msg: "Please enter a valid email address." });
-  if (!validator.isLength(req.body.password, { min: 8 }))
-    validationErrors.push({
-      msg: "Password must be at least 8 characters long."
-    });
-  if (req.body.password !== req.body.confirmPassword)
-    validationErrors.push({ msg: "Passwords do not match." });
-
-  if (validationErrors.length) {
-    req.flash("errors", validationErrors);
-    return res.redirect("../signup/o");
-  }
-  req.body.email = validator.normalizeEmail(req.body.email, {
-    gmail_remove_dots: false
+exports.getRequestForm = (req, res) => {
+  res.render("auth/request.ejs", {
+    title: "Request a Wrestler or Promotion Owner Account",
+    user: req.user
   });
-
-  const user = new User({
-    userName: req.body.userName,
-    email: req.body.email,
-    password: req.body.password,
-    isFan: false,
-    isWrestler: false,
-    isOwner: true,
-    avatarImage: "",
-    cloudinaryId: ""
-  });
-
-  User.findOne(
-    { $or: [{ email: req.body.email }, { userName: req.body.userName }] },
-    (err, existingUser) => {
-      if (err) {
-        return next(err);
-      }
-      if (existingUser) {
-        req.flash("errors", {
-          msg: "Account with that email address or username already exists."
-        });
-        return res.redirect("../signup/o");
-      }
-      user.save((err) => {
-        if (err) {
-          return next(err);
-        }
-        req.logIn(user, (err) => {
-          if (err) {
-            return next(err);
-          }
-          res.redirect("/profile");
-        });
-      });
-    }
-  );
 };
 
-exports.postWrestlerSignup = (req, res, next) => {
-  const validationErrors = [];
-  if (!validator.isLength(req.body.userName, { min: 2 }))
-    validationErrors.push({ msg: "User name must be at least 2 characters long." });
-  if (!validator.isEmail(req.body.email))
-    validationErrors.push({ msg: "Please enter a valid email address." });
-  if (!validator.isLength(req.body.password, { min: 8 }))
-    validationErrors.push({
-      msg: "Password must be at least 8 characters long."
+exports.postRequestForm = async (req, res, next) => {
+  async function mainMail(name, email, subject, message) {
+    const transporter = await nodeMailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASSWORD,
+      },
     });
-  if (req.body.password !== req.body.confirmPassword)
-    validationErrors.push({ msg: "Passwords do not match." });
+    const mailOption = {
+      from: email,
+      to: process.env.GMAIL_USER,
+      subject: subject,
+      html: `You got a message from 
+      Email : ${email}
+      Name: ${name}
+      Message: ${message}`,
+    };
+    try {
+      await transporter.sendMail(mailOption);
+      return Promise.resolve("Message Sent Successfully!");
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  const validationErrors = [];
+  if (validator.isEmpty(req.body.userName))
+    validationErrors.push({ msg: "Please enter your full name." });
+  if (!validator.isEmail(req.body.userEmail))
+    validationErrors.push({ msg: "Please enter a valid email address." });
+  if (validator.isEmpty(req.body.userSubject))
+    validationErrors.push({ msg: "Please enter a subject." });
+  if (validator.isEmpty(req.body.userMessage))
+    validationErrors.push({ msg: "Please enter a message." });
 
   if (validationErrors.length) {
     req.flash("errors", validationErrors);
-    return res.redirect("../signup/w");
+    return res.redirect("../request");
   }
-  req.body.email = validator.normalizeEmail(req.body.email, {
+  req.body.userEmail = validator.normalizeEmail(req.body.userEmail, {
     gmail_remove_dots: false
   });
 
-  const user = new User({
-    userName: req.body.userName,
-    email: req.body.email,
-    password: req.body.password,
-    isFan: false,
-    isWrestler: true,
-    isOwner: false,
-    avatarImage: "",
-    cloudinaryId: ""
-  });
-
-  User.findOne(
-    { $or: [{ email: req.body.email }, { userName: req.body.userName }] },
-    (err, existingUser) => {
-      if (err) {
-        return next(err);
-      }
-      if (existingUser) {
-        req.flash("errors", {
-          msg: "Account with that email address or username already exists."
-        });
-        return res.redirect("../signup/w");
-      }
-      user.save((err) => {
-        if (err) {
-          return next(err);
-        }
-        req.logIn(user, (err) => {
-          if (err) {
-            return next(err);
-          }
-          res.redirect("/profile");
-        });
-      });
-    }
-  );
+  try {
+    await mainMail(req.body.userName, req.body.userEmail, req.body.userSubject, req.body.userMessage);
+    return res.render("auth/sent.ejs", { title: "Message Sent", user: req.user });
+  } catch (error) {
+    validationErrors.push({ msg: "Message could not be sent." });
+    req.flash("errors", validationErrors);
+    return res.redirect("../request");
+  }
 };
