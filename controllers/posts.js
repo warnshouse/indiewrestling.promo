@@ -1,11 +1,36 @@
 const cloudinary = require("../middleware/cloudinary");
 const Post = require("../models/Post");
+const User = require("../models/User");
+const { postOwnerSignup } = require("./auth");
 
 module.exports = {
   getProfile: async (req, res) => {
     try {
       const posts = await Post.find({ user: req.user.id });
       res.render("main/profile.ejs", { posts: posts, user: req.user });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  putAvatar: async (req, res) => {
+    try {
+      // Delete existing avatar from cloudinary
+      if (req.user.cloudinaryId) {
+        await cloudinary.uploader.destroy(req.user.cloudinaryId);
+      }
+
+      // Upload new avatar to cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path);
+
+      await User.findOneAndUpdate(
+        { _id: req.user.id },
+        {
+          avatarImage: result.secure_url,
+          cloudinaryId: result.public_id
+        }
+      );
+      console.log("Avatar has been updated!");
+      res.redirect("/profile");
     } catch (err) {
       console.log(err);
     }

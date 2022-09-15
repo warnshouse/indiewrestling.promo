@@ -44,11 +44,11 @@
           </ul>
           <form class="d-flex">
             <% if (!user) { %>
-            <a class="btn btn-outline-light me-2" href="/auth/login">Login</a>
-            <a class="btn btn-primary" href="/auth/signup">Create Account</a>
+            <a class="btn btn-outline-light me-2" href="/login">Login</a>
+            <a class="btn btn-primary" href="/signup">Create Account</a>
             <% } else { %>
             <a class="btn btn-primary me-2" href="/profile">My Account</a>
-            <a class="btn btn-outline-danger" href="/auth/logout">Sign out</a>
+            <a class="btn btn-outline-danger" href="/logout">Sign out</a>
             <% } %>
           </form>
         </div>

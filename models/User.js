@@ -9,6 +9,8 @@ const UserSchema = new mongoose.Schema({
   isFan: { type: Boolean, default: true },
   isWrestler: { type: Boolean, default: false },
   isOwner: { type: Boolean, default: false },
+  avatarImage: { type: String, required: false },
+  cloudinaryId: { type: String, required: false },
   followedUsers: [{ type: ObjectId, ref: 'User' }],
   followedPromos: [{ type: ObjectId, ref: 'Promotion' }],
   withPromos: [{ type: ObjectId, ref: 'Promotion' }],

@@ -110,7 +110,9 @@ exports.postFanSignup = (req, res, next) => {
   const user = new User({
     userName: req.body.userName,
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+    avatarImage: "",
+    cloudinaryId: ""
   });
 
   User.findOne(
@@ -167,7 +169,9 @@ exports.postOwnerSignup = (req, res, next) => {
     password: req.body.password,
     isFan: false,
     isWrestler: false,
-    isOwner: true
+    isOwner: true,
+    avatarImage: "",
+    cloudinaryId: ""
   });
 
   User.findOne(
@@ -224,7 +228,9 @@ exports.postWrestlerSignup = (req, res, next) => {
     password: req.body.password,
     isFan: false,
     isWrestler: true,
-    isOwner: false
+    isOwner: false,
+    avatarImage: "",
+    cloudinaryId: ""
   });
 
   User.findOne(

@@ -12,7 +12,7 @@
           <% } %>
         </ul>
       </div>
-      <% if (user) { %>
+      <% if (user.isOwner) { %>
       <a class="btn btn-primary" href="/promos/add">Add a promotion</a>
       <% } %>
     </div>

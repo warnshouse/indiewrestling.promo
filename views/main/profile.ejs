@@ -4,7 +4,17 @@
         <div class="col-6">
           <div>
             <p><strong>User Name</strong>: <%= user.userName %></p>
+            <% if (user.avatarImage) { %>
+              <img class="w-25" src="<%= user.avatarImage %>">
+            <% } %>
             <p><strong>Email</strong>: <%= user.email %></p>
+            <form action="/profile/avatar?_method=PUT" enctype="multipart/form-data" method="POST">
+              <div class="mb-3">
+                <label for="imgUpload" class="form-label">Upload avatar:</label>
+                <input type="file" class="form-control" id="imageUpload" name="file">
+              </div>
+              <button type="submit" class="btn btn-primary" value="Upload">Submit</button>
+            </form>
           </div>
           <div class="mt-5">
             <h2>Add a post</h2>
