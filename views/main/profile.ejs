@@ -3,11 +3,12 @@
       <div class="row mt-5">
         <div class="col-6">
           <div>
-            <p><strong>User Name</strong>: <%= user.userName %></p>
-            <% if (user.avatarImage) { %>
-              <img class="w-25" src="<%= user.avatarImage %>">
+            <p><strong>User Name</strong>: <%= profileuser.userName %></p>
+            <% if (profileuser.avatarImage) { %>
+              <img class="w-25" src="<%= profileuser.avatarImage %>">
             <% } %>
-            <p><strong>Email</strong>: <%= user.email %></p>
+            <% if (profileuser.id === user.id) { %>
+            <p><strong>Email</strong>: <%= profileuser.email %></p>
             <form action="/profile/avatar?_method=PUT" enctype="multipart/form-data" method="POST">
               <div class="mb-3">
                 <label for="imgUpload" class="form-label">Upload avatar:</label>
@@ -15,7 +16,23 @@
               </div>
               <button type="submit" class="btn btn-primary" value="Upload">Submit</button>
             </form>
+            <% } else { %>
+            <form
+              class="col-1"
+              action="/follow/<%= profileuser.id %>?_method=PUT"
+              method="POST"
+            >
+              <button class="btn btn-primary" type="submit">
+                <% if (!isfollowing) { %>
+                Follow
+                <% } else { %>
+                Following
+                <% } %>
+              </button>
+            </form>
+            <% } %>
           </div>
+          <% if (profileuser.id === user.id) { %>
           <div class="mt-5">
             <h2>Add a post</h2>
             <form action="/post/createPost" enctype="multipart/form-data" method="POST">
@@ -34,6 +51,7 @@
               <button type="submit" class="btn btn-primary" value="Upload">Submit</button>
             </form>
           </div>
+          <% } %>
         </div>
         <div class="col-6">
           <ul class="row list-unstyled">

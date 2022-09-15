@@ -6,7 +6,8 @@ const PostSchema = new mongoose.Schema({
   cloudinaryId: { type: String, required: true },
   caption: { type: String, required: true },
   likes: { type: Number, required: true },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  author: { type: String, required: true },
+  authorId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   createdAt: { type: Date, default: Date.now }
 });
 

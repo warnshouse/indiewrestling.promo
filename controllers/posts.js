@@ -1,13 +1,42 @@
+const mongoose = require("mongoose");
 const cloudinary = require("../middleware/cloudinary");
 const Post = require("../models/Post");
 const User = require("../models/User");
 const { postOwnerSignup } = require("./auth");
 
 module.exports = {
-  getProfile: async (req, res) => {
+  getOwnProfile: async (req, res) => {
     try {
-      const posts = await Post.find({ user: req.user.id });
-      res.render("main/profile.ejs", { posts: posts, user: req.user });
+      const posts = await Post.find({ authorId: req.user.id });
+      res.render("main/profile.ejs", { posts: posts, profileuser: req.user, user: req.user });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  getUserProfile: async (req, res) => {
+    try {
+      const queriedUser = await User.findOne({ userName: { $regex : new RegExp(req.params.username, "i") } });
+      const posts = await Post.find({ authorId: queriedUser.id });
+      const isFollowing = req.user.followedUsers.some(ele => ele._id.toString() === queriedUser.id);
+      res.render("main/profile.ejs", { isfollowing: isFollowing, posts: posts, profileuser: queriedUser, user: req.user });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  putFollow: async (req, res) => {
+    try {
+      const isFollowing = req.user.followedUsers.some(ele => ele._id.toString() === req.params.id);
+
+      if (!isFollowing) {
+        await User.findByIdAndUpdate(req.user.id, { $push: { followedUsers: req.params.id } });
+        console.log("User followed!");
+      } else {
+        await User.findByIdAndUpdate(req.user.id, { $pull: { followedUsers: req.params.id } } );
+        console.log("User unfollowed!");
+      }
+
+      const followedUser = await User.findOne({ id: req.params.id });
+      res.redirect(`/profile/${followedUser.userName}`);
     } catch (err) {
       console.log(err);
     }
@@ -62,7 +91,8 @@ module.exports = {
         cloudinaryId: result.public_id,
         caption: req.body.caption,
         likes: 0,
-        user: req.user.id
+        author: req.user.userName,
+        authorId: req.user.id
       });
       console.log("Post has been added!");
       res.redirect("/profile");
@@ -91,7 +121,7 @@ module.exports = {
       // Delete image from cloudinary
       await cloudinary.uploader.destroy(post.cloudinaryId);
       // Delete post from db
-      await Post.remove({ _id: req.params.id });
+      await Post.deleteOne({ _id: req.params.id });
       console.log("Deleted Post");
       res.redirect("/profile");
     } catch (err) {
