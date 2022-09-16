@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const cloudinary = require("../middleware/cloudinary");
 const Post = require("../models/Post");
 const User = require("../models/User");
-const { postOwnerSignup } = require("./auth");
+const Comment = require("../models/Comment");
 
 module.exports = {
   getOwnProfile: async (req, res) => {
@@ -75,7 +75,8 @@ module.exports = {
   getPost: async (req, res) => {
     try {
       const post = await Post.findById(req.params.id);
-      res.render("posts/post.ejs", { post: post, user: req.user });
+      const comments = await Comment.find({ post: req.params.id }).sort({ createdAt: "asc" }).lean();
+      res.render("posts/post.ejs", { post: post, comments: comments, user: req.user });
     } catch (err) {
       console.log(err);
     }
@@ -122,7 +123,9 @@ module.exports = {
       await cloudinary.uploader.destroy(post.cloudinaryId);
       // Delete post from db
       await Post.deleteOne({ _id: req.params.id });
-      console.log("Deleted Post");
+      // Delete post's comments from db
+      await Comment.deleteMany({ post: req.params.id });
+      console.log("Deleted post and any comments.");
       res.redirect("/profile");
     } catch (err) {
       res.redirect("/profile");
