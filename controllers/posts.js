@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const cloudinary = require("../middleware/cloudinary");
+const validator = require("validator");
 const Post = require("../models/Post");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
@@ -43,6 +44,13 @@ module.exports = {
   },
   putAvatar: async (req, res) => {
     try {
+      if (req.fileValidationError) {
+        const validationErrors = [];
+        validationErrors.push({ msg: "Image file type is not supported." });
+        req.flash("errors", validationErrors);
+        return res.redirect("/profile");
+      }
+
       // Delete existing avatar from cloudinary
       if (req.user.cloudinaryId) {
         await cloudinary.uploader.destroy(req.user.cloudinaryId);
@@ -83,22 +91,42 @@ module.exports = {
   },
   createPost: async (req, res) => {
     try {
-      // Upload image to cloudinary
-      const result = await cloudinary.uploader.upload(req.file.path);
+      if (req.fileValidationError) {
+        const validationErrors = [];
+        validationErrors.push({ msg: "Image file type is not supported." });
+        req.flash("errors", validationErrors);
+        return res.redirect("/profile");
+      }
 
-      await Post.create({
-        title: req.body.title,
-        image: result.secure_url,
-        cloudinaryId: result.public_id,
-        caption: req.body.caption,
-        likes: 0,
-        author: req.user.userName,
-        authorId: req.user.id
-      });
+      if (req.file) {
+        // Upload image to cloudinary
+        const result = await cloudinary.uploader.upload(req.file.path);
+
+        await Post.create({
+          title: req.body.title,
+          image: result.secure_url,
+          cloudinaryId: result.public_id,
+          caption: req.body.caption,
+          likes: 0,
+          author: req.user.userName,
+          authorId: req.user.id
+        });
+      } else {
+        await Post.create({
+          title: req.body.title,
+          image: "",
+          cloudinaryId: "",
+          caption: req.body.caption,
+          likes: 0,
+          author: req.user.userName,
+          authorId: req.user.id
+        });
+      }
       console.log("Post has been added!");
       res.redirect("/profile");
     } catch (err) {
       console.log(err);
+      res.redirect("/profile");
     }
   },
   likePost: async (req, res) => {
@@ -120,7 +148,9 @@ module.exports = {
       // Find post by id
       let post = await Post.findById({ _id: req.params.id });
       // Delete image from cloudinary
-      await cloudinary.uploader.destroy(post.cloudinaryId);
+      if (post.cloudinaryId) {
+        await cloudinary.uploader.destroy(post.cloudinaryId);
+      }
       // Delete post from db
       await Post.deleteOne({ _id: req.params.id });
       // Delete post's comments from db

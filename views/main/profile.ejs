@@ -3,6 +3,12 @@
       <div class="row mt-5">
         <div class="col-6">
           <div>
+            <% if (locals.messages.errors) { %> <% messages.errors.forEach(el => { %>
+            <div class="alert alert-danger"><%= el.msg %></div>
+            <% }) %> <% } %> <% if (locals.messages.info) { %> <%
+            messages.info.forEach(el => { %>
+            <div class="alert alert-info"><%= el.msg %></div>
+            <% }) %> <% } %>
             <p><strong>User Name</strong>: <%= profileuser.userName %></p>
             <% if (profileuser.avatarImage) { %>
               <img class="w-25" src="<%= profileuser.avatarImage %>">
@@ -12,7 +18,7 @@
             <form action="/profile/avatar?_method=PUT" enctype="multipart/form-data" method="POST">
               <div class="mb-3">
                 <label for="imgUpload" class="form-label">Upload avatar:</label>
-                <input type="file" class="form-control" id="imageUpload" name="file">
+                <input type="file" class="form-control" id="imageUpload" name="file" accept="image/png, image/jpeg, image/gif">
               </div>
               <button type="submit" class="btn btn-primary" value="Upload">Submit</button>
             </form>
@@ -46,7 +52,7 @@
               </div>
               <div class="mb-3">
                 <label for="imgUpload" class="form-label">Image</label>
-                <input type="file" class="form-control" id="imageUpload" name="file">
+                <input type="file" class="form-control" id="imageUpload" name="file" accept="image/png, image/jpeg, image/gif">
               </div>
               <button type="submit" class="btn btn-primary" value="Upload">Submit</button>
             </form>
