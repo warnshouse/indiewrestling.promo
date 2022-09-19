@@ -2,12 +2,12 @@
     <div class="container">
       <div class="row justify-content-center mt-5">
         <div class="col-6">
-          <h2><%= promo.promoName %></h2>
-          <img class="img-fluid" src="<%= promo.image %>" />
+          <h2><%= wrestler.ringName %></h2>
+          <img class="img-fluid" src="<%= wrestler.userImage %>" />
           <div class="row justify-content-between">
             <form
               class="col-1"
-              action="/promos/follow/<%= promo.id %>?_method=PUT"
+              action="/wrestlers/follow/<%= wrestler.id %>?_method=PUT"
               method="POST"
             >
               <button class="btn btn-primary" type="submit">
@@ -20,7 +20,7 @@
             </form>
             <% if (user.isAdmin) { %>
             <form
-              action="/promos/delete/<%= promo.id %>?_method=DELETE"
+              action="/wrestlers/delete/<%= wrestler.id %>?_method=PUT"
               method="POST"
               class="col-3"
             >
@@ -30,13 +30,20 @@
           </div>
         </div>
         <div class="col-3 mt-5">
-          <p><%= promo.description %></p>
-          <p><%= promo.city %>, <%= promo.state %></p>
-          <p>Owned by: <a href="/profile/<%= promo.ownedBy %>"><%= promo.ownedBy %></a></p>
+          <p>Biography: <%= wrestler.biography %></p>
+          <p>Height: <%= wrestler.height %></p>
+          <p>Weight: <%= wrestler.weight %></p>
+          <% if (wrestler.partners) { %>
+          <p>Partner(s): <%= wrestler.partners %></p>
+          <% } %>
+          <% if (wrestler.factions) { %>
+          <p>Faction: <%= wrestler.factions %></p>
+          <% } %>
+          <p>Currently with: <%= wrestler.promos %></p> 
         </div>
         <div class="col-6 mt-5">
           <a class="btn btn-primary" href="/profile">Return to Profile</a>
-          <a class="btn btn-primary" href="/promos">Return to Promotion List</a>
+          <a class="btn btn-primary" href="/wrestlers">Return to Wrestler List</a>
         </div>
       </div>
     </div>

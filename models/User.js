@@ -6,15 +6,22 @@ const UserSchema = new mongoose.Schema({
   userName: { type: String, unique: true },
   email: { type: String, unique: true },
   password: String,
-  isFan: { type: Boolean, default: true },
-  isWrestler: { type: Boolean, default: false },
-  isOwner: { type: Boolean, default: false },
-  avatarImage: { type: String, required: false },
+  userImage: { type: String, required: false },
   cloudinaryId: { type: String, required: false },
-  followedUsers: [{ type: ObjectId, ref: 'User' }],
+  followedWrestlers: [{ type: ObjectId, ref: 'User' }],
   followedPromos: [{ type: ObjectId, ref: 'Promotion' }],
-  withPromos: [{ type: ObjectId, ref: 'Promotion' }],
-  joinedOn: { type: Date, default: Date.now }
+  isFan: { type: Boolean, default: true },
+  isWrestler: { type: Boolean, required: false },
+  isOwner: { type: Boolean, required: false },
+  isAdmin: { type: Boolean, required: false },
+  ringName: { type: String, required: false},
+  height: { type: String, required: false},
+  weight: { type: String, required: false},
+  biography: { type: String, required: false },
+  partners: { type: String, required: false },
+  factions: { type: String, required: false },
+  promos: { type: String, required: false },
+  joinDate: { type: Date, default: Date.now }
 });
 
 // Password hash middleware

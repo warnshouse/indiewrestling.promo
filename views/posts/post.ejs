@@ -3,18 +3,10 @@
       <div class="row justify-content-center mt-5">
         <div class="col-6">
           <h2><%= post.title %></h2>
-          <h3><a href="/profile/<%= post.author %>"><%= post.author %></a></h3>
-          <img class="img-fluid" src="<%= post.image%>" />
+          <h3><a href="/profile/<%= post.userName %>"><%= post.userName %></a></h3>
+          <img class="img-fluid" src="<%= post.image %>" />
           <div class="row justify-content-between">
-            <form
-              class="col-1"
-              action="/post/likePost/<%= post.id %>?_method=PUT"
-              method="POST"
-            >
-              <button class="btn btn-primary fa fa-heart" type="submit"></button>
-            </form>
-            <h3 class="col-3">Likes: <%= post.likes %></h3>
-            <% if (post.authorId == user.id) { %>
+            <% if (post.userId == user.id) { %>
             <form
               action="/post/deletePost/<%= post.id %>?_method=DELETE"
               method="POST"
@@ -26,7 +18,7 @@
           </div>
         </div>
         <div class="col-3 mt-5">
-          <p><%= post.caption %></p>
+          <p><%= post.text %></p>
         </div>
         <div class="mt-5">
           <h2>Add a comment</h2>
@@ -41,8 +33,8 @@
         <ul>
           <% for (let i = 0; i < comments.length; i++) { %>
           <li class="col-6 justify-content-between mt-5">
-            <%= comments[i].userName %> says: "<%= comments[i].comment %>"
-            <% if (comments[i].user == user.id) { %>
+            <a href="/profile/<%= comments[i].userName %>"><%= comments[i].userName %></a> says: "<%= comments[i].comment %>"
+            <% if (comments[i].userId == user.id) { %>
             <form
               action="/comment/deleteComment/<%= comments[i]._id %>?_method=DELETE"
               method="POST"

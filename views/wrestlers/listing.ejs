@@ -2,11 +2,11 @@
     <div class="container">
       <div class="row justify-content-center mt-5">
         <ul class="row list-unstyled">
-          <% for (let i = 0; i < promos.length; i++) {%>
+          <% for (let i = 0; i < wrestlers.length; i++) {%>
           <li class="col-6 justify-content-between mt-5">
-            <a href="/promos/<%= promos[i]._id %>">
-              <!-- <img class="img-fluid" src="<%= promos[i].image %>"> -->
-              <%= promos[i].promoName %>
+            <a href="/wrestlers/<%= wrestlers[i]._id %>">
+              <!-- <img class="img-fluid" src="<%= wrestlers[i].image %>"> -->
+              <%= wrestlers[i].ringName %>
             </a>
           </li>
           <% } %>

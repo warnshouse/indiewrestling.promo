@@ -8,8 +8,8 @@ const Comment = require("../models/Comment");
 module.exports = {
   getOwnProfile: async (req, res) => {
     try {
-      const posts = await Post.find({ authorId: req.user.id });
-      res.render("main/profile.ejs", { posts: posts, profileuser: req.user, user: req.user });
+      const posts = await Post.find({ userId: req.user.id });
+      res.render("main/profile.ejs", { posts: posts, profileUser: req.user, user: req.user });
     } catch (err) {
       console.log(err);
     }
@@ -17,27 +17,9 @@ module.exports = {
   getUserProfile: async (req, res) => {
     try {
       const queriedUser = await User.findOne({ userName: { $regex : new RegExp(req.params.username, "i") } });
-      const posts = await Post.find({ authorId: queriedUser.id });
-      const isFollowing = req.user.followedUsers.some(ele => ele._id.toString() === queriedUser.id);
-      res.render("main/profile.ejs", { isfollowing: isFollowing, posts: posts, profileuser: queriedUser, user: req.user });
-    } catch (err) {
-      console.log(err);
-    }
-  },
-  putFollow: async (req, res) => {
-    try {
-      const isFollowing = req.user.followedUsers.some(ele => ele._id.toString() === req.params.id);
-
-      if (!isFollowing) {
-        await User.findByIdAndUpdate(req.user.id, { $push: { followedUsers: req.params.id } });
-        console.log("User followed!");
-      } else {
-        await User.findByIdAndUpdate(req.user.id, { $pull: { followedUsers: req.params.id } } );
-        console.log("User unfollowed!");
-      }
-
-      const followedUser = await User.findOne({ id: req.params.id });
-      res.redirect(`/profile/${followedUser.userName}`);
+      const posts = await Post.find({ userId: queriedUser.id });
+      const isFollowing = req.user.followedWrestlers.some(ele => ele._id.toString() === queriedUser.id);
+      res.render("main/profile.ejs", { isFollowing: isFollowing, posts: posts, profileUser: queriedUser, user: req.user });
     } catch (err) {
       console.log(err);
     }
@@ -62,7 +44,7 @@ module.exports = {
       await User.findOneAndUpdate(
         { _id: req.user.id },
         {
-          avatarImage: result.secure_url,
+          userImage: result.secure_url,
           cloudinaryId: result.public_id
         }
       );
@@ -83,7 +65,7 @@ module.exports = {
   getPost: async (req, res) => {
     try {
       const post = await Post.findById(req.params.id);
-      const comments = await Comment.find({ post: req.params.id }).sort({ createdAt: "asc" }).lean();
+      const comments = await Comment.find({ postId: req.params.id }).sort({ createdAt: "asc" }).lean();
       res.render("posts/post.ejs", { post: post, comments: comments, user: req.user });
     } catch (err) {
       console.log(err);
@@ -104,22 +86,20 @@ module.exports = {
 
         await Post.create({
           title: req.body.title,
+          text: req.body.text,
           image: result.secure_url,
           cloudinaryId: result.public_id,
-          caption: req.body.caption,
-          likes: 0,
-          author: req.user.userName,
-          authorId: req.user.id
+          userId: req.user.id,
+          userName: req.user.userName
         });
       } else {
         await Post.create({
           title: req.body.title,
+          text: req.body.text,
           image: "",
           cloudinaryId: "",
-          caption: req.body.caption,
-          likes: 0,
-          author: req.user.userName,
-          authorId: req.user.id
+          userId: req.user.id,
+          userName: req.user.userName
         });
       }
       console.log("Post has been added!");
@@ -127,20 +107,6 @@ module.exports = {
     } catch (err) {
       console.log(err);
       res.redirect("/profile");
-    }
-  },
-  likePost: async (req, res) => {
-    try {
-      await Post.findOneAndUpdate(
-        { _id: req.params.id },
-        {
-          $inc: { likes: 1 }
-        }
-      );
-      console.log("Likes +1");
-      res.redirect(`/post/${req.params.id}`);
-    } catch (err) {
-      console.log(err);
     }
   },
   deletePost: async (req, res) => {
@@ -154,7 +120,7 @@ module.exports = {
       // Delete post from db
       await Post.deleteOne({ _id: req.params.id });
       // Delete post's comments from db
-      await Comment.deleteMany({ post: req.params.id });
+      await Comment.deleteMany({ postId: req.params.id });
       console.log("Deleted post and any comments.");
       res.redirect("/profile");
     } catch (err) {

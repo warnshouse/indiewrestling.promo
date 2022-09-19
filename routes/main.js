@@ -10,7 +10,6 @@ const authMiddleware = require("../middleware/auth");
 router.get("/", authMiddleware.ensureGuest, homeController.getIndex);
 router.get("/profile", authMiddleware.ensureAuth, postsController.getOwnProfile);
 router.get("/profile/:username", authMiddleware.ensureAuth, postsController.getUserProfile);
-router.put("/follow/:id", authMiddleware.ensureAuth, postsController.putFollow);
 router.put("/profile/avatar", upload.single("file"), postsController.putAvatar);
 router.get("/feed", authMiddleware.ensureAuth, postsController.getFeed);
 router.get("/login", authMiddleware.ensureGuest, authController.getLogin);

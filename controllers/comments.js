@@ -5,9 +5,8 @@ module.exports = {
     try {
       await Comment.create({
         comment: req.body.comment,
-        post: req.params.id,
-        likes: 0,
-        user: req.user.id,
+        postId: req.params.id,
+        userId: req.user.id,
         userName: req.user.userName
       });
       console.log("Comment has been added!");

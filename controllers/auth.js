@@ -7,10 +7,7 @@ exports.getLogin = (req, res) => {
   if (req.user) {
     return res.redirect("/profile");
   }
-  res.render("auth/login.ejs", {
-    title: "Login",
-    user: req.user
-  });
+  res.render("auth/login.ejs", { title: "Login", user: req.user });
 };
 
 exports.postLogin = (req, res, next) => {
@@ -61,10 +58,7 @@ exports.getSignup = (req, res) => {
   if (req.user) {
     return res.redirect("/profile");
   }
-  res.render("auth/signup.ejs", {
-    title: "Create Fan Account",
-    user: req.user
-  });
+  res.render("auth/signup.ejs", { title: "Create Fan Account", user: req.user });
 };
 
 exports.postSignup = (req, res, next) => {
@@ -84,15 +78,13 @@ exports.postSignup = (req, res, next) => {
     req.flash("errors", validationErrors);
     return res.redirect("../signup");
   }
-  req.body.email = validator.normalizeEmail(req.body.email, {
-    gmail_remove_dots: false
-  });
+  req.body.email = validator.normalizeEmail(req.body.email, { gmail_remove_dots: false });
 
   const user = new User({
     userName: req.body.userName,
     email: req.body.email,
     password: req.body.password,
-    avatarImage: "",
+    userImage: "",
     cloudinaryId: ""
   });
 
@@ -170,9 +162,7 @@ exports.postRequestForm = async (req, res, next) => {
     req.flash("errors", validationErrors);
     return res.redirect("../request");
   }
-  req.body.userEmail = validator.normalizeEmail(req.body.userEmail, {
-    gmail_remove_dots: false
-  });
+  req.body.userEmail = validator.normalizeEmail(req.body.userEmail, { gmail_remove_dots: false });
 
   try {
     await mainMail(req.body.userName, req.body.userEmail, req.body.userSubject, req.body.userMessage);

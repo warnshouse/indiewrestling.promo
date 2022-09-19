@@ -4,10 +4,12 @@ const upload = require("../middleware/multer");
 const promosController = require("../controllers/promos");
 const authMiddleware = require("../middleware/auth");
 
-//Promotion Routes - simplified for now
+//Promotions Routes - simplified for now
 router.get("/", promosController.getPromos);
-router.get("/promo/:id", promosController.getPromo);
-router.get("/add", authMiddleware.ensureOwner, promosController.getForm);
-router.post("/add", authMiddleware.ensureOwner, upload.single("file"), promosController.postForm);
+router.get("/add", promosController.addPromo);
+router.post("/add", upload.single("file"), promosController.postPromo);
+router.put("/follow/:id", authMiddleware.ensureAuth, promosController.putFollow);
+router.delete("/delete/:id", authMiddleware.ensureAuth, promosController.deletePromo);
+router.get("/:id", promosController.getPromo);
 
 module.exports = router;
