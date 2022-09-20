@@ -17,9 +17,14 @@ module.exports = {
   getUserProfile: async (req, res) => {
     try {
       const queriedUser = await User.findOne({ userName: { $regex : new RegExp(req.params.username, "i") } });
-      const posts = await Post.find({ userId: queriedUser.id });
-      const isFollowing = req.user.followedWrestlers.some(ele => ele._id.toString() === queriedUser.id);
-      res.render("main/profile.ejs", { isFollowing: isFollowing, posts: posts, profileUser: queriedUser, user: req.user });
+      if (queriedUser.isFan) {
+        const posts = await Post.find({ userId: queriedUser.id });
+        const isFollowing = req.user.followedWrestlers.some(ele => ele._id.toString() === queriedUser.id);
+        res.render("main/profile.ejs", { isFollowing: isFollowing, posts: posts, profileUser: queriedUser, user: req.user });
+      }
+      else if (queriedUser.isWrestler) {
+        res.redirect(`/wrestlers/${queriedUser.ringName}`);
+      }
     } catch (err) {
       console.log(err);
     }

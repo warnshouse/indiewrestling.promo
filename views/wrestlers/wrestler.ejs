@@ -3,7 +3,7 @@
       <div class="row justify-content-center mt-5">
         <div class="col-6">
           <h2><%= wrestler.ringName %></h2>
-          <img class="img-fluid" src="<%= wrestler.userImage %>" />
+          <img class="img-fluid" src="<%= wrestler.wrestlerImage %>" />
           <div class="row justify-content-between">
             <form
               class="col-1"
@@ -18,15 +18,6 @@
                 <% } %>
               </button>
             </form>
-            <% if (user.isAdmin) { %>
-            <form
-              action="/wrestlers/delete/<%= wrestler.id %>?_method=PUT"
-              method="POST"
-              class="col-3"
-            >
-              <button class="btn btn-primary fa fa-trash" type="submit"></button>
-            </form>
-            <% } %>
           </div>
         </div>
         <div class="col-3 mt-5">

@@ -57,48 +57,13 @@
           </ul>
           <div class="row justify-content-center mt-5">
             <a class="btn btn-primary" href="/feed">Return to Feed</a>
-            <% if (user.isAdmin) { %>
-            <% if (profileUser.id === user.id) { %>
-            <a class="btn btn-primary" href="/promos/add">Add a Promo</a>
-            <% } else if (!profileUser.isWrestler) { %>
-            <form
-              action="/wrestlers/add/<%= profileUser.id %>?_method=PUT"
-              method="POST"
-            >
-              <div>
-                <label for="ringName" class="form-label">Ring Name</label>
-                <input type="text" class="form-control" id="ringName" name="ringName">
-              </div>
-              <div>
-                <label for="height" class="form-label">Height</label>
-                <input type="text" class="form-control" id="height" name="height">
-              </div>
-              <div>
-                <label for="weight" class="form-label">Weight</label>
-                <input type="text" class="form-control" id="weight" name="weight">
-              </div>
-              <div>
-                <label for="bio" class="form-label">Biography</label>
-                <textarea class="form-control" id="bio" name="bio"></textarea>
-              </div>
-              <div>
-                <label for="partners" class="form-label">Partner(s)</label>
-                <input type="text" class="form-control" id="partners" name="partners">
-              </div>
-              <div>
-                <label for="factions" class="form-label">Faction(s)</label>
-                <input type="text" class="form-control" id="factions" name="factions">
-              </div>
-              <div>
-                <label for="promos" class="form-label">Promotion(s)</label>
-                <input type="text" class="form-control" id="promos" name="promos">
-              </div>
-              <button class="btn btn-primary" type="submit">Add as Wrestler</button>
-            </form>
+            <% if (user.isAdmin && profileUser.id === user.id) { %>
+            <a class="btn btn-primary" href="/admin/add/promo">Manage Promos</a>
+            <a class="btn btn-primary" href="/admin/add/owner">Manage Owners</a>
+            <a class="btn btn-primary" href="/admin/add/wrestler">Manage Wrestlers</a>
             <% } %>
-            <% } %>
-          </div>  
-        </div>  
+          </div>
+        </div>
       </div>
     </div>
 <%- include('../partials/footer') -%>
