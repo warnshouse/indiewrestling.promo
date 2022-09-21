@@ -1,17 +1,83 @@
 <%- include('../partials/header') -%>
-    <div class="container">
-      <div class="row justify-content-center mt-5">
-        <ul class="row list-unstyled">
-          <% for (let i = 0; i < posts.length; i++) {%>
-          <li class="col-6 justify-content-between mt-5">
-            <a href="/profile/<%= posts[i].userName %>"><%= posts[i].userName %></a>
-            <a href="/post/<%= posts[i]._id %>">
-              <p><%= posts[i].title %></p>
-              <img class="img-fluid" src="<%= posts[i].image %>">
-            </a>
-          </li>
-          <% } %>
-        </ul>
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+      <br>
+      <!-- Content Row -->
+      <div class="row">
+        <!-- Content Column -->
+        <div class="col-lg-1"></div>
+        <div class="col-lg-4 mb-4">
+          <!-- Upcoming Events -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Upcoming Events</h6>
+            </div>
+            <div class="card-body">
+              <div class="text-center">
+                <a target="_blank" rel="nofollow" href="#">Events Appear Here</a>
+              </div>
+            </div>
+          </div>
+          <!-- Newly Added Promotions -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Newly Arrived Promotions</h6>
+            </div>
+            <div class="card-body">
+              <div class="text-center">
+                <p>
+                  <a target="_blank" rel="nofollow" href="#">Promotions Appear Here</a>
+                </p>
+                <p class="mb-0">
+                  <a target="_blank" rel="nofollow" href="#">Promotions Appear Here</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+          <!-- Main Feed -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <div class="d-sm-flex align-items-center justify-content-between mb-0">
+                <h6 class="m-0 font-weight-bold text-primary">Newest Updates From Your Follows</h6>
+                <% if (user.isWrestler || user.isOwner || user.isAdmin) { %>
+                <div>
+                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-address-card fa-sm text-white"></i> Create New Post</a>
+                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-calendar-plus fa-sm text-white"></i> Create New Event</a>
+                </div>
+                <% } %>
+              </div>
+            </div>
+            <div class="card-body">
+              <% for (let i = 0; i < posts.length; i++) { %>
+              <div class="card mb-3">
+                <div class="card-body">
+                  <p>
+                    <% if (posts[i].userImage) { %>
+                      <a class="me-2"><img src="<%= posts[i].userImage %>" class="rounded-circle" style="height:5rem;width:5rem;"></a>
+                    <% } else { %>
+                      <a class="me-2"><img src="/img/undraw_profile.svg" style="height:5rem;width:5rem;"></a>
+                    <% } %>
+                    <a href="/profile/<%= posts[i].userName %>"><%= posts[i].userName %></a>
+                  </p>
+                  <p class="fw-bold"><a href="/post/<%= posts[i]._id %>"><%= posts[i].title %></a></p>
+                  <hr>
+                  <% if (posts[i].image) { %>
+                  <a href="<%= posts[i].image %>"><img class="img-fluid" src="<%= posts[i].image %>"></a>
+                  <p></p>
+                  <% } %>
+                  <p><%= posts[i].text %></p>
+                  <hr>
+                  <p class="mb-0"><%= posts[i].createdAt.toUTCString() %></p>
+                </div>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-1"></div>
       </div>
     </div>
+  <!-- /.container-fluid -->
 <%- include('../partials/footer') -%>

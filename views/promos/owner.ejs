@@ -2,12 +2,12 @@
     <div class="container">
       <div class="row justify-content-center mt-5">
         <div class="col-6">
-          <h2><%= promo.promoName %></h2>
-          <img class="img-fluid" src="<%= promo.promoImage %>" />
+          <h2><%= owner.ownerName %></h2>
+          <img class="img-fluid" src="<%= owner.userImage %>" />
           <div class="row justify-content-between">
             <form
               class="col-1"
-              action="/promos/follow/<%= promo.id %>?_method=PUT"
+              action="/promos/follow/<%= owner.id %>?_method=PUT"
               method="POST"
             >
               <button class="btn btn-primary" type="submit">
@@ -21,9 +21,7 @@
           </div>
         </div>
         <div class="col-3 mt-5">
-          <p><%= promo.description %></p>
-          <p><%= promo.city %>, <%= promo.state %></p>
-          <p>Owned by: <a href="/promos/owners/<%= promo.ownedBy %>"><%= promo.ownedBy %></a></p>
+          <p>Owner of: <a href="/promos/<%= owner.promos %>"><%= owner.promos %></a></p>
         </div>
         <div class="col-6 mt-5">
           <a class="btn btn-primary" href="/profile">Return to Profile</a>

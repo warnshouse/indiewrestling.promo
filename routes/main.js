@@ -16,7 +16,7 @@ router.get("/login", authMiddleware.ensureGuest, authController.getLogin);
 router.post("/login", authMiddleware.ensureGuest, authController.postLogin);
 router.get("/logout", authMiddleware.ensureAuth, authController.logout);
 router.get("/signup", authMiddleware.ensureGuest, authController.getSignup);
-router.post("/signup", authMiddleware.ensureGuest, authController.postSignup);
+router.post("/signup", authMiddleware.ensureGuest, authController.postSignup, authController.addUserToOwnFollows);
 router.get("/request", authController.getRequestForm);
 router.post("/request", authController.postRequestForm);
 

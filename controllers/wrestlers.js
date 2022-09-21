@@ -1,3 +1,4 @@
+const { findById } = require("../models/Post");
 const User = require("../models/User");
 
 module.exports = {
@@ -13,8 +14,16 @@ module.exports = {
     try {
       const wrestler = await User.findById(req.params.id);
       if (wrestler.isWrestler) {
-        const isFollowing = req.user.followedWrestlers.some(ele => ele._id.toString() === wrestler.id);
-        res.render("wrestlers/wrestler.ejs", { isFollowing: isFollowing, wrestler: wrestler, user: req.user });
+        const isFollowing = req.user.followedUsers.some(ele => ele._id.toString() === wrestler.id);
+
+        const teammates = [];
+        let teammate = null;
+        for (let i = 0; i < wrestler.teammates.length; i++) {
+          teammate = await User.findById(wrestler.teammates[i]);
+          teammates.push(teammate.ringName);
+        }
+
+        res.render("wrestlers/wrestler.ejs", { isFollowing: isFollowing, teammates: teammates, wrestler: wrestler, user: req.user });
       } else {
         res.redirect("/wrestlers");
       }
@@ -24,13 +33,13 @@ module.exports = {
   },
   putFollow: async (req, res) => {
     try {
-      const isFollowing = req.user.followedWrestlers.some(ele => ele._id.toString() === req.params.id);
+      const isFollowing = req.user.followedUsers.some(ele => ele._id.toString() === req.params.id);
       if (!isFollowing) {
-        await User.findByIdAndUpdate(req.user.id, { $push: { followedWrestlers: req.params.id } });
-        console.log("Wrestler followed!");
+        await User.findByIdAndUpdate(req.user.id, { $push: { followedUsers: req.params.id } });
+        console.log("User followed!");
       } else {
-        await User.findByIdAndUpdate(req.user.id, { $pull: { followedWrestlers: req.params.id } } );
-        console.log("Wrestler unfollowed!");
+        await User.findByIdAndUpdate(req.user.id, { $pull: { followedUsers: req.params.id } } );
+        console.log("User unfollowed!");
       }
       res.redirect(`/wrestlers/${req.params.id}`);
     } catch (err) {

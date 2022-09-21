@@ -2,6 +2,8 @@
     <div class="container">
       <div class="row justify-content-center mt-5">
         <ul class="row list-unstyled">
+          <% if (promos.length > 0) { %>
+          <h2>Promotions</h2>
           <% for (let i = 0; i < promos.length; i++) {%>
           <li class="col-6 justify-content-between mt-5">
             <a href="/promos/<%= promos[i]._id %>">
@@ -9,6 +11,17 @@
               <%= promos[i].promoName %>
             </a>
           </li>
+          <% } %>
+          <% } else if (owners.length > 0) { %>
+          <h2>Promotion Owners</h2>
+          <% for (let i = 0; i < owners.length; i++) {%>
+          <li class="col-6 justify-content-between mt-5">
+            <a href="/promos/owners/<%= owners[i]._id %>">
+              <!-- <img class="img-fluid" src="<%= promos[i].image %>"> -->
+              <%= owners[i].ownerName %>
+            </a>
+          </li>
+          <% } %>
           <% } %>
         </ul>
       </div>

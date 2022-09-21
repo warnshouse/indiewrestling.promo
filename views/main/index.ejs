@@ -1,28 +1,47 @@
 <%- include('../partials/header') -%>
-    <div class="container">
-      <p class="lead">A boilerplate for Node.js web applications.</p>
-      <hr>
-      <div class="row">
-        <div class="col-md-6">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
-          <p><a class="btn btn-primary" href="#" role="button">View details »</a></p>
-        </div>
-        <div class="col-md-6">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
-          <p><a class="btn btn-primary" href="#" role="button">View details »</a></p>
-        </div>
-        <div class="col-md-6">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
-          <p><a class="btn btn-primary" href="#" role="button">View details »</a></p>
-        </div>
-        <div class="col-md-6">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
-          <p><a class="btn btn-primary" href="#" role="button">View details »</a></p>
-        </div>
+    <section class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center" style="background-image:url('/img/hero-image.jpg');background-repeat:no-repeat;background-attachment:fixed;background-position:center;background-size:cover;">
+      <div class="col-md-7 p-lg-5 mx-auto my-5">
+        <h1 class="display-4 fw-normal text-white">IndieWrestling.Promo</h1>
+        <p class="lead fs-4 fw-normal text-white">Your connection to local indie wrestling promotions.</p>
       </div>
-    </div>
+      <div class="product-device shadow-sm d-none d-md-block"></div>
+      <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+    </section>
+    <section class="features-icons bg-light text-center">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-4">
+                  <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                      <div class="features-icons-icon d-flex"><i class="fas fa-search-location fa-5x m-auto text-primary"></i></div>
+                      <h3>Find Promotions</h3>
+                      <p class="lead mb-0">Find new wrestling promotions in your local area!</p>
+                  </div>
+              </div>
+              <div class="col-lg-4">
+                  <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                      <div class="features-icons-icon d-flex"><i class="fas fa-users fa-5x m-auto text-primary"></i></div>
+                      <h3>Follow Wrestlers</h3>
+                      <p class="lead mb-0">Follow wrestlers and stay up-to-date on their upcoming gigs!</p>
+                  </div>
+              </div>
+              <div class="col-lg-4">
+                  <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+                      <div class="features-icons-icon d-flex"><i class="fas fa-calendar-alt fa-5x m-auto text-primary"></i></div>
+                      <h3>Discover Events</h3>
+                      <p class="lead mb-0">Discover and support hometown wrestling events!</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </section>
+    <section class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-white text-center bg-dark" id="signup">
+      <div class="container position-relative">
+          <div class="row justify-content-center">
+              <div class="col-xl-6">
+                  <h2 class="mb-4">Ready to get started? Sign up now!</h2>
+                  <a class="btn btn-warning" href="/signup">Create Account</a>
+              </div>
+          </div>
+      </div>
+    </section>
 <%- include('../partials/footer') -%>

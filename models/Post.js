@@ -7,6 +7,7 @@ const PostSchema = new mongoose.Schema({
   cloudinaryId: { type: String, required: false },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   userName: { type: String, required: true },
+  userImage: { type: String, required: false },
   createdAt: { type: Date, default: Date.now }
 });
 

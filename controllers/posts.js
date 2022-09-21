@@ -19,7 +19,7 @@ module.exports = {
       const queriedUser = await User.findOne({ userName: { $regex : new RegExp(req.params.username, "i") } });
       if (queriedUser.isFan) {
         const posts = await Post.find({ userId: queriedUser.id });
-        const isFollowing = req.user.followedWrestlers.some(ele => ele._id.toString() === queriedUser.id);
+        const isFollowing = req.user.followedUsers.some(ele => ele._id.toString() === queriedUser.id);
         res.render("main/profile.ejs", { isFollowing: isFollowing, posts: posts, profileUser: queriedUser, user: req.user });
       }
       else if (queriedUser.isWrestler) {
@@ -61,7 +61,7 @@ module.exports = {
   },
   getFeed: async (req, res) => {
     try {
-      const posts = await Post.find().sort({ createdAt: "desc" }).lean();
+      const posts = await Post.find({ userId: { $in: req.user.followedUsers } }).sort({ createdAt: "desc" }).lean();
       res.render("main/feed.ejs", { posts: posts, user: req.user });
     } catch (err) {
       console.log(err);
@@ -95,7 +95,8 @@ module.exports = {
           image: result.secure_url,
           cloudinaryId: result.public_id,
           userId: req.user.id,
-          userName: req.user.userName
+          userName: req.user.userName,
+          userImage: req.user.userImage
         });
       } else {
         await Post.create({
@@ -104,7 +105,8 @@ module.exports = {
           image: "",
           cloudinaryId: "",
           userId: req.user.id,
-          userName: req.user.userName
+          userName: req.user.userName,
+          userImage: req.user.userImage
         });
       }
       console.log("Post has been added!");

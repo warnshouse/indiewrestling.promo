@@ -21,7 +21,7 @@ module.exports = {
         city: req.body.city,
         state: req.body.state,
         description: req.body.description,
-        image: result.secure_url,
+        promoImage: result.secure_url,
         cloudinaryId: result.public_id,
         ownedBy: req.body.owner
       });
@@ -57,6 +57,8 @@ module.exports = {
       if (selectedUser) {
         // Upload image to cloudinary
         const result = await cloudinary.uploader.upload(req.file.path);
+        const teammates = (req.body.teammates !== "") ? req.body.teammates.split(", ") : [];
+        const promos = (req.body.promos !== "") ? req.body.promos.split(", ") : [];
 
         await User.findByIdAndUpdate(selectedUser.id, 
           { $set: { 
@@ -67,13 +69,29 @@ module.exports = {
             height: req.body.height,
             weight: req.body.weight,
             biography: req.body.bio,
-            partners: req.body.partners,
-            factions: req.body.factions,
-            promos: req.body.promos
+            teammates: [],
+            teams: req.body.teams,
+            promos: []
             },
-            $unset: { isFan: "" }}
+            $unset: { isFan: "" }
+          }
         );
-        await User.findByIdAndUpdate(req.params.id, { $unset: { isFan: "" } });
+
+        if (teammates.length > 0) {
+          let teammate = null;
+          for (let i = 0; i < teammates.length; i++) {
+            teammate = await User.findOne({ ringName: teammates[i] });
+            await User.findByIdAndUpdate(selectedUser.id, { $push: { teammates: teammate.id } });
+          }
+        }
+
+        if (promos.length > 0) {
+          let promo = null;
+          for (let i = 0; i < promos.length; i++) {
+            promo = await Promotion.findOne({ promoName: promos[i] });
+            await User.findByIdAndUpdate(selectedUser.id, { $push: { promos: promo.id } });
+          }
+        }
         console.log("Wrestler added!");
       } else {
         console.log("User could not be found!");
@@ -102,9 +120,9 @@ module.exports = {
               height: "",
               weight: "",
               biography: "",
-              partners: "",
-              factions: "",
-              promos: ""
+              teammates: [],
+              teams: "",
+              promos: []
            }
           }
         );

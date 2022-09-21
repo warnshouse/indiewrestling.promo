@@ -24,8 +24,17 @@
           <p>Biography: <%= wrestler.biography %></p>
           <p>Height: <%= wrestler.height %></p>
           <p>Weight: <%= wrestler.weight %></p>
-          <% if (wrestler.partners) { %>
-          <p>Partner(s): <%= wrestler.partners %></p>
+          <% if (wrestler.teammates.length > 0) { %>
+          <p>
+            Teammates(s): 
+            <% for (let i = 0; i < teammates.length; i++) { %>
+            <% if (i === teammates.length - 1) { %>
+            <%= teammates[i] %>
+            <% } else { %>
+            <%= teammates[i] %>, 
+            <% } %>
+            <% } %>
+          </p>
           <% } %>
           <% if (wrestler.factions) { %>
           <p>Faction: <%= wrestler.factions %></p>
