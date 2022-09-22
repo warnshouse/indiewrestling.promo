@@ -22,8 +22,27 @@
         </div>
         <div class="col-3 mt-5">
           <p><%= promo.description %></p>
-          <p><%= promo.city %>, <%= promo.state %></p>
-          <p>Owned by: <a href="/promos/owners/<%= promo.ownedBy %>"><%= promo.ownedBy %></a></p>
+          <p>Location: <%= promo.city %>, <%= promo.state %></p>
+          <p>
+            Current roster:
+            <% for (let i = 0; i < wrestlers.length; i++) { %>
+              <% if (i !== wrestlers.length - 1) { %>
+              <a href="/wrestlers/<%= wrestlers[i].proName %>"><%= wrestlers[i].proName %></a>, 
+              <% } else { %>
+                <a href="/wrestlers/<%= wrestlers[i].proName %>"><%= wrestlers[i].proName %></a>
+              <% } %>
+            <% } %>
+          </p>
+          <p>
+            Owned by:
+            <% for (let i = 0; i < owners.length; i++) { %>
+              <% if (i !== owners.length - 1) { %>
+              <a href="/promos/owners/<%= owners[i].proName %>"><%= owners[i].proName %></a>, 
+              <% } else { %>
+              <a href="/promos/owners/<%= owners[i].proName %>"><%= owners[i].proName %></a>
+              <% } %>
+            <% } %>
+          </p>
         </div>
         <div class="col-6 mt-5">
           <a class="btn btn-primary" href="/profile">Return to Profile</a>

@@ -25,9 +25,12 @@
             </div>
             <div class="card-body">
               <div class="text-center">
-                <p>
-                  <a target="_blank" rel="nofollow" href="#">Promotions Appear Here</a>
+                <% for (let i = 0; i < promos.length; i++) { %>
+                <p class="mb-0">
+                  <a href="/promos/<%= promos[i].promoName %>"><img src="<%= promos[i].promoImage %>" class="rounded-circle" style="height:5rem;width:5rem;"></a> 
+                  <a href="/promos/<%= promos[i].promoName %>"><%= promos[i].promoName %></a>
                 </p>
+                <% } %>
                 <p class="mb-0">
                   <a target="_blank" rel="nofollow" href="#">Promotions Appear Here</a>
                 </p>
@@ -61,10 +64,10 @@
                     <% } %>
                     <a href="/profile/<%= posts[i].userName %>"><%= posts[i].userName %></a>
                   </p>
-                  <p class="fw-bold"><a href="/post/<%= posts[i]._id %>"><%= posts[i].title %></a></p>
+                  <p class="fw-bold"><a href="/posts/<%= posts[i]._id %>"><%= posts[i].title %></a></p>
                   <hr>
-                  <% if (posts[i].image) { %>
-                  <a href="<%= posts[i].image %>"><img class="img-fluid" src="<%= posts[i].image %>"></a>
+                  <% if (posts[i].postImage) { %>
+                  <a href="/posts/<%= posts[i]._id %>"><img class="img-fluid" src="<%= posts[i].postImage %>"></a>
                   <p></p>
                   <% } %>
                   <p><%= posts[i].text %></p>

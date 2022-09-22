@@ -14,26 +14,46 @@ module.exports = {
   },
   getPromo: async (req, res) => {
     try {
-      const promo = await Promotion.findById(req.params.id);
+      const promo = await Promotion.findOne({ promoName: req.params.name });
+      const wrestlers = await User.find({ $and: [ { _id: { $in: promo.roster } }, { isWrestler: true } ] }).lean();
+      const owners = await User.find({ $and: [ { _id: { $in: promo.roster } }, { isOwner: true } ] }).lean();
       const isFollowing = req.user.followedPromos.some(ele => ele._id.toString() === promo.id);
-      res.render("promos/promo.ejs", { isFollowing: isFollowing, promo: promo, user: req.user });
+      res.render("promos/promo.ejs", { isFollowing: isFollowing, owners: owners, promo: promo, user: req.user, wrestlers: wrestlers });
     } catch (err) {
       console.log(err);
     }
   },
-  putFollow: async (req, res) => {
+  ownerFollow: async (req, res) => {
     try {
-      const isFollowing = req.user.followedPromos.some(ele => ele._id.toString() === req.params.id);
+      const owner = await User.findOne({ proName: req.params.name });
+      const isFollowing = req.user.followedUsers.some(ele => ele._id.toString() === owner.id);
 
       if (!isFollowing) {
-        await User.findByIdAndUpdate(req.user.id, { $push: { followedPromos: req.params.id } });
-        console.log("Promotion/Owner followed!");
+        await User.findByIdAndUpdate(req.user.id, { $push: { followedUsers: owner.id } });
+        console.log("Owner followed!");
       } else {
-        await User.findByIdAndUpdate(req.user.id, { $pull: { followedPromos: req.params.id } } );
-        console.log("Promotion/Owner unfollowed!");
+        await User.findByIdAndUpdate(req.user.id, { $pull: { followedUsers: owner.id } } );
+        console.log("Owner unfollowed!");
       }
 
-      const followedPromo = await Promotion.findById(req.params.id);
+      res.redirect("back");
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  promoFollow: async (req, res) => {
+    try {
+      const promo = await Promo.findOne({ promoName: req.params.name });
+      const isFollowing = req.user.followedPromos.some(ele => ele._id.toString() === promo.id);
+
+      if (!isFollowing) {
+        await User.findByIdAndUpdate(req.user.id, { $push: { followedPromos: promo.id } });
+        console.log("Promotion followed!");
+      } else {
+        await User.findByIdAndUpdate(req.user.id, { $pull: { followedPromos: promo.id } } );
+        console.log("Promotion unfollowed!");
+      }
+
       res.redirect("back");
     } catch (err) {
       console.log(err);
@@ -41,7 +61,7 @@ module.exports = {
   },
   getOwners: async (req, res) => {
     try {
-      const owners = await User.find({ isOwner: true }).collation({ locale: "en" }).sort({ownerName: 1}).lean();
+      const owners = await User.find({ isOwner: true }).collation({ locale: "en" }).sort({proName: 1}).lean();
       const promos = [];
       res.render("promos/listing.ejs", { promos: promos, owners: owners, user: req.user });
     } catch (err) {
@@ -50,7 +70,7 @@ module.exports = {
   },
   getOwner: async (req, res) => {
     try {
-      const owner = await User.findOne({ userName: req.params.name });
+      const owner = await User.findOne({ proName: req.params.name });
       const isFollowing = req.user.followedPromos.some(ele => ele._id.toString() === owner.id);
       res.render("promos/owner.ejs", { isFollowing: isFollowing, owner: owner, user: req.user });
     } catch (err) {

@@ -8,8 +8,8 @@ const PromotionSchema = new mongoose.Schema({
   description: { type: String, required: true },
   promoImage: { type: String, required: true },
   cloudinaryId: { type: String, required: true },
-  roster: [{ type: ObjectId, ref: "User" }],
-  ownedBy: [{ type: ObjectId, ref: "User" }],
+  roster: { type: [ObjectId], ref: "User" },
+  siteURL: { type: String, required: false },
   joinDate: { type: Date, default: Date.now }
 });
 

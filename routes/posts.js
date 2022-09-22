@@ -8,5 +8,7 @@ const authMiddleware = require("../middleware/auth");
 router.get("/:id", authMiddleware.ensureAuth, postsController.getPost);
 router.post("/createPost", upload.single("file"), postsController.createPost);
 router.delete("/deletePost/:id", postsController.deletePost);
+router.post("/createComment/:id", postsController.createComment);
+router.delete("/deleteComment/:id", postsController.deleteComment);
 
 module.exports = router;

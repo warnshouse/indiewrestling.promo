@@ -7,10 +7,10 @@ const authMiddleware = require("../middleware/auth");
 //Post Routes - simplified for now
 router.get("/add/:type", authMiddleware.ensureAuth, adminController.getForm);
 router.post("/add/promo", upload.single("file"), adminController.addPromo);
-router.delete("/delete/promo", authMiddleware.ensureAuth, adminController.deletePromo);
-//router.put("/add/owner/:id", authMiddleware.ensureAuth, adminController.addOwner);
-//router.put("/delete/owner/:id", authMiddleware.ensureAuth, adminController.deleteOwner);
+router.delete("/remove/promo", authMiddleware.ensureAuth, adminController.removePromo);
+router.put("/add/owner", upload.single("file"), adminController.addOwner);
+router.put("/remove/owner", authMiddleware.ensureAuth, adminController.removeOwner);
 router.put("/add/wrestler", upload.single("file"), adminController.addWrestler);
-router.put("/delete/wrestler", authMiddleware.ensureAuth, adminController.deleteWrestler);
+router.put("/remove/wrestler", authMiddleware.ensureAuth, adminController.removeWrestler);
 
 module.exports = router;

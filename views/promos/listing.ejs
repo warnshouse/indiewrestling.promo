@@ -6,8 +6,8 @@
           <h2>Promotions</h2>
           <% for (let i = 0; i < promos.length; i++) {%>
           <li class="col-6 justify-content-between mt-5">
-            <a href="/promos/<%= promos[i]._id %>">
-              <!-- <img class="img-fluid" src="<%= promos[i].image %>"> -->
+            <a href="/promos/<%= promos[i].promoName %>">
+              <img class="img-fluid" src="<%= promos[i].promoImage %>">
               <%= promos[i].promoName %>
             </a>
           </li>
@@ -16,9 +16,9 @@
           <h2>Promotion Owners</h2>
           <% for (let i = 0; i < owners.length; i++) {%>
           <li class="col-6 justify-content-between mt-5">
-            <a href="/promos/owners/<%= owners[i]._id %>">
-              <!-- <img class="img-fluid" src="<%= promos[i].image %>"> -->
-              <%= owners[i].ownerName %>
+            <a href="/promos/owners/<%= owners[i].proName %>">
+              <img class="img-fluid" src="<%= owners[i].proImage %>">
+              <%= owners[i].proName %>
             </a>
           </li>
           <% } %>

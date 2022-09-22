@@ -4,6 +4,7 @@ const validator = require("validator");
 const Post = require("../models/Post");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
+const Promotion = require("../models/Promotion");
 
 module.exports = {
   getOwnProfile: async (req, res) => {
@@ -61,8 +62,9 @@ module.exports = {
   },
   getFeed: async (req, res) => {
     try {
-      const posts = await Post.find({ userId: { $in: req.user.followedUsers } }).sort({ createdAt: "desc" }).lean();
-      res.render("main/feed.ejs", { posts: posts, user: req.user });
+      const posts = await Post.find({ $or: [ { userId: { $in: req.user.followedUsers } }, { promoId : { $in: req.user.followedPromos } } ] }).sort({ createdAt: "desc" }).lean();
+      const promos = await Promotion.find().sort({ joinDate: "asc" }).limit(5).lean();
+      res.render("main/feed.ejs", { posts: posts, promos: promos, user: req.user });
     } catch (err) {
       console.log(err);
     }
@@ -92,7 +94,7 @@ module.exports = {
         await Post.create({
           title: req.body.title,
           text: req.body.text,
-          image: result.secure_url,
+          postImage: result.secure_url,
           cloudinaryId: result.public_id,
           userId: req.user.id,
           userName: req.user.userName,
@@ -102,7 +104,7 @@ module.exports = {
         await Post.create({
           title: req.body.title,
           text: req.body.text,
-          image: "",
+          postImage: "",
           cloudinaryId: "",
           userId: req.user.id,
           userName: req.user.userName,
@@ -132,6 +134,31 @@ module.exports = {
       res.redirect("/profile");
     } catch (err) {
       res.redirect("/profile");
+    }
+  },
+  createComment: async (req, res) => {
+    try {
+      await Comment.create({
+        text: req.body.comment,
+        postId: req.params.id,
+        userId: req.user.id,
+        userName: req.user.userName
+      });
+      console.log("Comment has been added!");
+      res.redirect(`/posts/${req.params.id}`);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  deleteComment: async (req, res) => {
+    try {
+      // Delete comment from db
+      await Comment.deleteOne({ _id: req.params.id });
+      console.log("Comment has been deleted.");
+      res.redirect("back");
+    } catch (err) {
+      console.log(err);
+      res.redirect("back");
     }
   }
 };

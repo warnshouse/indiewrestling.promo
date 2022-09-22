@@ -83,8 +83,12 @@
               <textarea class="form-control" id="description" name="description"></textarea>
             </div>
             <div class="mb-3">
-              <label for="owner" class="form-label">Owner's user name</label>
-              <input type="text" class="form-control" id="owner" name="owner">
+              <label for="roster" class="form-label">User names of roster</label>
+              <input type="text" class="form-control" id="roster" name="roster">
+            </div>
+            <div class="mb-3">
+              <label for="siteURL" class="form-label">Website URL</label>
+              <input type="url" class="form-control" id="siteURL" name="siteURL">
             </div>
             <div class="mb-3">
               <label for="imgUpload" class="form-label">Image</label>
@@ -93,9 +97,9 @@
             <button type="submit" class="btn btn-primary" value="Upload">Add</button>
           </form>
           <br>
-          <h2>Delete a promotion</h2>
+          <h2>Remove a promotion</h2>
           <form
-          action="/admin/delete/promo?_method=DELETE"
+          action="/admin/remove/promo?_method=DELETE"
           method="POST"
           class="col-3"
           >
@@ -103,11 +107,11 @@
               <label for="promoName" class="form-label">Promo Name</label>
               <input type="text" class="form-control" id="promoName" name="promoName">
             </div>
-            <button type="submit" class="btn btn-primary">Delete</button>
+            <button type="submit" class="btn btn-primary">Remove</button>
           </form>
           <% } %>
           <% if (type === "wrestler") { %>
-          <h2>Add a wrestler</h2>
+          <h2>Add wrestler status to user</h2>
           <form
             action="/admin/add/wrestler?_method=PUT"
             enctype="multipart/form-data"
@@ -118,8 +122,8 @@
               <input type="text" class="form-control" id="userName" name="userName">
             </div>
             <div class="mb-3">
-              <label for="ringName" class="form-label">Ring Name</label>
-              <input type="text" class="form-control" id="ringName" name="ringName">
+              <label for="proName" class="form-label">Professional Name</label>
+              <input type="text" class="form-control" id="proName" name="proName">
             </div>
             <div class="mb-3">
               <label for="height" class="form-label">Height</label>
@@ -134,16 +138,12 @@
               <textarea class="form-control" id="bio" name="bio"></textarea>
             </div>
             <div class="mb-3">
-              <label for="teammates" class="form-label">Teammate(s)</label>
+              <label for="teammates" class="form-label">User names of teammate(s)</label>
               <input type="text" class="form-control" id="teammates" name="teammates">
             </div>
             <div class="mb-3">
               <label for="teams" class="form-label">Team(s)</label>
               <input type="text" class="form-control" id="teams" name="teams">
-            </div>
-            <div class="mb-3">
-              <label for="promos" class="form-label">Promotion(s)</label>
-              <input type="text" class="form-control" id="promos" name="promos">
             </div>
             <div class="mb-3">
               <label for="imgUpload" class="form-label">Image</label>
@@ -152,17 +152,56 @@
             <button class="btn btn-primary" type="submit">Add</button>
           </form>
           <br>
-          <h2>Delete a wrestler</h2>
+          <h2>Remove wrestler status from user</h2>
           <form
-            action="/admin/delete/wrestler?_method=PUT"
+            action="/admin/remove/wrestler?_method=PUT"
             method="POST"
             class="col-3"
           >
             <div class="mb-3">
-              <label for="ringName" class="form-label">Ring Name</label>
-              <input type="text" class="form-control" id="ringName" name="ringName">
+              <label for="userName" class="form-label">User name</label>
+              <input type="text" class="form-control" id="userName" name="userName">
             </div>
-            <button type="submit" class="btn btn-primary">Delete</button>
+            <button type="submit" class="btn btn-primary">Remove</button>
+          </form>
+          <% } %>
+          <% if (type === "owner") { %>
+          <h2>Add owner status to user</h2>
+          <form
+            action="/admin/add/owner?_method=PUT"
+            enctype="multipart/form-data"
+            method="POST"
+          >
+            <div class="mb-3">
+              <label for="userName" class="form-label">User Name</label>
+              <input type="text" class="form-control" id="userName" name="userName">
+            </div>
+            <div class="mb-3">
+              <label for="proName" class="form-label">Professional Name</label>
+              <input type="text" class="form-control" id="proName" name="proName">
+            </div>
+            <div class="mb-3">
+              <label for="bio" class="form-label">Biography</label>
+              <textarea class="form-control" id="bio" name="bio"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="imgUpload" class="form-label">Image</label>
+              <input type="file" class="form-control" id="imageUpload" name="file">
+            </div>
+            <button class="btn btn-primary" type="submit">Add</button>
+          </form>
+          <br>
+          <h2>Remove owner status from user</h2>
+          <form
+            action="/admin/remove/owner?_method=PUT"
+            method="POST"
+            class="col-3"
+          >
+            <div class="mb-3">
+              <label for="userName" class="form-label">User name</label>
+              <input type="text" class="form-control" id="userName" name="userName">
+            </div>
+            <button type="submit" class="btn btn-primary">Remove</button>
           </form>
           <% } %>
         </section>

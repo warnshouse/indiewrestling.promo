@@ -7,8 +7,9 @@ const authMiddleware = require("../middleware/auth");
 //Promotions Routes - simplified for now
 router.get("/", promosController.getPromos);
 router.get("/owners", authMiddleware.ensureAuth, promosController.getOwners);
+router.get("/owners/follow/:name", authMiddleware.ensureAuth, promosController.ownerFollow);
 router.get("/owners/:name", authMiddleware.ensureAuth, promosController.getOwner);
-router.put("/follow/:id", authMiddleware.ensureAuth, promosController.putFollow);
-router.get("/:id", promosController.getPromo);
+router.put("/follow/:name", authMiddleware.ensureAuth, promosController.promoFollow);
+router.get("/:name", promosController.getPromo);
 
 module.exports = router;

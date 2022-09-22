@@ -15,6 +15,7 @@ module.exports = {
     try {
       // Upload image to cloudinary
       const result = await cloudinary.uploader.upload(req.file.path);
+      const roster = (req.body.roster !== "") ? req.body.roster.split(", ") : [];
 
       await Promotion.create({
         promoName: req.body.name,
@@ -23,17 +24,26 @@ module.exports = {
         description: req.body.description,
         promoImage: result.secure_url,
         cloudinaryId: result.public_id,
-        ownedBy: req.body.owner
+        siteURL: req.body.siteURL
       });
+
+      if (roster.length > 0) {
+        let member = null;
+        for (let i = 0; i < roster.length; i++) {
+          member = await User.findOne({ userName: roster[i] });
+          await Promotion.findOneAndUpdate({ promoName: req.body.name }, { $push: { roster: member.id } });
+        }
+      }
+
       console.log("Promotion has been added!");
       res.redirect("/promos");
     } catch (err) {
       console.log(err);
     }
   },
-  deletePromo: async (req, res) => {
+  removePromo: async (req, res) => {
     try {
-      // Find promotion by id
+      // Find promotion by its name
       const promo = await Promotion.findOne({ promoName: req.body.promoName });
       if (promo) {
         // Delete image from cloudinary
@@ -58,20 +68,18 @@ module.exports = {
         // Upload image to cloudinary
         const result = await cloudinary.uploader.upload(req.file.path);
         const teammates = (req.body.teammates !== "") ? req.body.teammates.split(", ") : [];
-        const promos = (req.body.promos !== "") ? req.body.promos.split(", ") : [];
 
         await User.findByIdAndUpdate(selectedUser.id, 
           { $set: { 
             isWrestler: true,
-            ringName: req.body.ringName,
-            wrestlerImage: result.secure_url,
-            wCloudinaryId: result.public_id,
+            proName: req.body.proName,
+            proImage: result.secure_url,
+            pCloudinaryId: result.public_id,
             height: req.body.height,
             weight: req.body.weight,
             biography: req.body.bio,
             teammates: [],
-            teams: req.body.teams,
-            promos: []
+            teams: req.body.teams
             },
             $unset: { isFan: "" }
           }
@@ -80,62 +88,117 @@ module.exports = {
         if (teammates.length > 0) {
           let teammate = null;
           for (let i = 0; i < teammates.length; i++) {
-            teammate = await User.findOne({ ringName: teammates[i] });
+            teammate = await User.findOne({ userName: teammates[i] });
             await User.findByIdAndUpdate(selectedUser.id, { $push: { teammates: teammate.id } });
-          }
-        }
-
-        if (promos.length > 0) {
-          let promo = null;
-          for (let i = 0; i < promos.length; i++) {
-            promo = await Promotion.findOne({ promoName: promos[i] });
-            await User.findByIdAndUpdate(selectedUser.id, { $push: { promos: promo.id } });
           }
         }
         console.log("Wrestler added!");
       } else {
         console.log("User could not be found!");
       }
-      res.redirect(`/wrestlers`);
+      res.redirect("/wrestlers");
     } catch (err) {
       console.log(err);
+      res.redirect("/wrestlers");
     }
   },
-  deleteWrestler: async (req, res) => {
+  removeWrestler: async (req, res) => {
     try {
-      // Find wrestler by ring name
-      const wrestler = await User.findOne({ ringName: req.body.ringName });
+      // Find wrestler by user name
+      const wrestler = await User.findOne({ userName: req.body.userName });
       
       if (wrestler) {
         // Delete wrestler's image from cloudinary
-        await cloudinary.uploader.destroy(wrestler.wCloudinaryId);
+        await cloudinary.uploader.destroy(wrestler.pCloudinaryId);
 
         await User.findByIdAndUpdate(wrestler.id, 
           { $set : { isFan: true }, 
             $unset: { 
               isWrestler: "",
-              ringName: "",
-              wrestlerImage: "",
-              wCloudinaryId: "",
+              proName: "",
+              proImage: "",
+              pCloudinaryId: "",
               height: "",
               weight: "",
               biography: "",
               teammates: [],
-              teams: "",
-              promos: []
-           }
+              teams: ""
+            }
           }
         );
 
-        // Delete wrestler from users' followed wrestlers
-        await User.updateMany({}, { $pull: { followedWrestlers: wrestler.id } });
-        console.log("Deleted wrestler status and removed from users' followed users.");
+        // Delete wrestler from users' followed users
+        await User.updateMany({}, { $pull: { followedUsers: wrestler.id } });
+        console.log("Removed wrestler status and deleted from users' followed users.");
       } else {
-        console.log("Wrestler not found and could not be deleted!");
+        console.log("Wrestler not found!");
       }
       res.redirect("/wrestlers");
     } catch (err) {
+      console.log(err);
       res.redirect("/wrestlers");
+    }
+  },
+  addOwner: async (req, res) => {
+    try {
+      const selectedUser = await User.findOne({ userName: req.body.userName });
+      if (selectedUser) {
+        // Upload image to cloudinary
+        const result = await cloudinary.uploader.upload(req.file.path);
+
+        await User.findByIdAndUpdate(selectedUser.id, 
+          { $set: { 
+            isOwner: true,
+            proName: req.body.proName,
+            proImage: result.secure_url,
+            pCloudinaryId: result.public_id,
+            biography: req.body.bio
+            },
+            $unset: { isFan: "" }
+          }
+        );
+
+        console.log("Owner added!");
+      } else {
+        console.log("User could not be found!");
+      }
+      res.redirect("/promos");
+    } catch (err) {
+      res.redirect("/promos");
+      console.log(err);
+    }
+  },
+  removeOwner: async (req, res) => {
+    try {
+      // Find owner by user name
+      const owner = await User.findOne({ userName: req.body.userName });
+      
+      if (owner) {
+        // Delete owner's image from cloudinary
+        await cloudinary.uploader.destroy(owner.pCloudinaryId);
+
+        await User.findByIdAndUpdate(owner.id, 
+          { $set : { isFan: true }, 
+            $unset: { 
+              isOwner: "",
+              proName: "",
+              proImage: "",
+              pCloudinaryId: "",
+              biography: ""
+            }
+          }
+        );
+
+        // Delete owner from users' followed users
+        await User.updateMany({}, { $pull: { followedUsers: owner.id } });
+        console.log("Removed owner status and deleted from users' followed users.");
+      } else {
+        console.log("Owner not found!");
+      }
+      res.redirect("/promos");
+    } catch (err) {
+      res.redirect("/promos");
+      console.log(err);
     }
   }
 };

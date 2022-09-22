@@ -11,7 +11,7 @@ const connectDB = require("./config/database");
 const mainRoutes = require("./routes/main");
 const postRoutes = require("./routes/posts");
 const adminRoutes = require("./routes/admin");
-const promosRoutes = require("./routes/promos");
+const promoRoutes = require("./routes/promos");
 const commentRoutes = require("./routes/comments");
 const wrestlerRoutes = require("./routes/wrestlers");
 
@@ -60,10 +60,10 @@ app.use(flash());
 
 //Setup routes for which the server is listening
 app.use("/", mainRoutes);
-app.use("/post", postRoutes);
 app.use("/admin", adminRoutes);
-app.use("/promos", promosRoutes);
-app.use("/comment", commentRoutes);
+app.use("/posts", postRoutes);
+app.use("/promos", promoRoutes);
+app.use("/comments", commentRoutes);
 app.use("/wrestlers", wrestlerRoutes);
 
 //Server running
