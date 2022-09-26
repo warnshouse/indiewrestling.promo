@@ -67,6 +67,7 @@ module.exports = {
       if (selectedUser) {
         // Upload image to cloudinary
         const result = await cloudinary.uploader.upload(req.file.path);
+        const promo = await Promotion.findOne({ promoName: req.body.promo });
         const teammates = (req.body.teammates !== "") ? req.body.teammates.split(", ") : [];
 
         await User.findByIdAndUpdate(selectedUser.id, 
@@ -84,6 +85,10 @@ module.exports = {
             $unset: { isFan: "" }
           }
         );
+
+        if (req.body.promo !== "") {
+          await Promotion.findOneAndUpdate({ promoName: req.body.promo }, { $push: { roster: selectedUser.id } });
+        }
 
         if (teammates.length > 0) {
           let teammate = null;
@@ -162,9 +167,9 @@ module.exports = {
       } else {
         console.log("User could not be found!");
       }
-      res.redirect("/promos");
+      res.redirect("/promos/owners");
     } catch (err) {
-      res.redirect("/promos");
+      res.redirect("/promos/owners");
       console.log(err);
     }
   },
@@ -173,7 +178,7 @@ module.exports = {
       // Find owner by user name
       const owner = await User.findOne({ userName: req.body.userName });
       
-      if (owner) {
+      if (owner.isOwner) {
         // Delete owner's image from cloudinary
         await cloudinary.uploader.destroy(owner.pCloudinaryId);
 

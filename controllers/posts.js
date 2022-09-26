@@ -5,6 +5,7 @@ const Post = require("../models/Post");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
 const Promotion = require("../models/Promotion");
+const Event = require("../models/Event");
 
 module.exports = {
   getOwnProfile: async (req, res) => {
@@ -64,7 +65,15 @@ module.exports = {
     try {
       const posts = await Post.find({ $or: [ { userId: { $in: req.user.followedUsers } }, { promoId : { $in: req.user.followedPromos } } ] }).sort({ createdAt: "desc" }).lean();
       const promos = await Promotion.find().sort({ joinDate: "asc" }).limit(5).lean();
-      res.render("main/feed.ejs", { posts: posts, promos: promos, user: req.user });
+      const events = await Event.find({ startDate: { $gte : new Date() } }).sort({ startDate: "desc" }).lean();
+      res.render("main/feed.ejs", { events: events, posts: posts, promos: promos, user: req.user });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  getPostForm: async (req, res) => {
+    try {
+      res.render("posts/form.ejs", { user: req.user });
     } catch (err) {
       console.log(err);
     }
@@ -129,36 +138,11 @@ module.exports = {
       // Delete post from db
       await Post.deleteOne({ _id: req.params.id });
       // Delete post's comments from db
-      await Comment.deleteMany({ postId: req.params.id });
+      await Comment.deleteMany({ originId: req.params.id });
       console.log("Deleted post and any comments.");
       res.redirect("/profile");
     } catch (err) {
       res.redirect("/profile");
-    }
-  },
-  createComment: async (req, res) => {
-    try {
-      await Comment.create({
-        text: req.body.comment,
-        postId: req.params.id,
-        userId: req.user.id,
-        userName: req.user.userName
-      });
-      console.log("Comment has been added!");
-      res.redirect(`/posts/${req.params.id}`);
-    } catch (err) {
-      console.log(err);
-    }
-  },
-  deleteComment: async (req, res) => {
-    try {
-      // Delete comment from db
-      await Comment.deleteOne({ _id: req.params.id });
-      console.log("Comment has been deleted.");
-      res.redirect("back");
-    } catch (err) {
-      console.log(err);
-      res.redirect("back");
     }
   }
 };

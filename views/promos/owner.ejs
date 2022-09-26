@@ -2,12 +2,12 @@
     <div class="container">
       <div class="row justify-content-center mt-5">
         <div class="col-6">
-          <h2><%= owner.ownerName %></h2>
-          <img class="img-fluid" src="<%= owner.userImage %>" />
+          <h2><%= owner.proName %></h2>
+          <img class="img-fluid" src="<%= owner.proImage %>" />
           <div class="row justify-content-between">
             <form
               class="col-1"
-              action="/promos/follow/<%= owner.id %>?_method=PUT"
+              action="/promos/owners/follow/<%= owner.proName %>?_method=PUT"
               method="POST"
             >
               <button class="btn btn-primary" type="submit">
@@ -21,7 +21,13 @@
           </div>
         </div>
         <div class="col-3 mt-5">
-          <p>Owner of: <a href="/promos/<%= owner.promos %>"><%= owner.promos %></a></p>
+          <p><%= owner.biography %></p>
+          <p>
+            Owner of: 
+            <% for (let i = 0; i < promos.length; i++) { %>
+            <a href="/promos/<%= promos[i].promoName %>"><%= promos[i].promoName %></a>
+            <% } %>
+          </p>
         </div>
         <div class="col-6 mt-5">
           <a class="btn btn-primary" href="/profile">Return to Profile</a>

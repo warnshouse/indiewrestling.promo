@@ -2,20 +2,14 @@
     <div class="container">
       <div class="row justify-content-center mt-5">
         <div class="col-6">
-          <h2><%= post.title %></h2>
-          <h3>
-            <% if (post.userImage) { %>
-              <a href="/profile/<%= post.userName %>"><img src="<%= post.userImage %>" class="rounded-circle" style="height:5rem;width:5rem;"></a>
-            <% } else { %>
-              <a href="/profile/<%= post.userName %>"><img src="/img/undraw_profile.svg" class="rounded-circle" style="height:5rem;width:5rem;"></a>
-            <% } %>
-            <a href="/profile/<%= post.userName %>"><%= post.userName %></a>
-          </h3>
-          <a href="<%= post.postImage %>"><img class="img-fluid" src="<%= post.postImage %>"></a>
+          <h2><%= event.eventName %></h2>
+          <% if (event.eventImage) { %>
+            <a href="<%= event.eventImage %>"><img class="img-fluid" src="<%= event.eventImage %>"></a>
+          <% } %>
           <div class="row justify-content-between">
-            <% if (post.userId == user.id) { %>
+            <% if (event.postedBy == user.id) { %>
             <form
-              action="/posts/deletePost/<%= post.id %>?_method=DELETE"
+              action="/events/deleteEvent/<%= event.id %>?_method=DELETE"
               method="POST"
               class="col-3"
             >
@@ -25,11 +19,23 @@
           </div>
         </div>
         <div class="col-3 mt-5">
-          <p><%= post.text %></p>
+          <p><a href="/promos/<%= event.promoName %>"><%= event.promoName %></a></p>
+          <p><%= event.description %></p>
+          <p>
+            <%= event.streetAddress %><br>
+            <%= event.city %>, <%= event.state %> <%= event.zip %>
+          </p>
+          <p>Start time: <%= event.startDate.toUTCString() %></p>
+          <p>
+            Participants: 
+            <% for (let i = 0; i < event.participants.length; i++) { %>
+            <%= event.participants[i] %>
+            <% } %>
+          </p>
         </div>
         <div class="mt-5">
           <h2>Add a comment</h2>
-          <form action="/comments/createComment/<%= post.id %>" method="POST">
+          <form action="/comments/createComment/<%= event.id %>" method="POST">
             <div class="mb-3">
               <label for="comment" class="form-label">Comment:</label>
               <input type="text" class="form-control" id="comment" name="comment">

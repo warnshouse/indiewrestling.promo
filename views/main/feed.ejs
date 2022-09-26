@@ -14,7 +14,19 @@
             </div>
             <div class="card-body">
               <div class="text-center">
-                <a target="_blank" rel="nofollow" href="#">Events Appear Here</a>
+                <% if (events.length) { %>
+                <% for (let i = 0; i < events.length; i++) { %>
+                <p class="mb-0">
+                  <a href="/events/<%= events[i].eventName %>"><img src="<%= events[i].eventImage %>" class="rounded-circle" style="height:5rem;width:5rem;"></a> 
+                  <a href="/events/<%= events[i].eventName %>"><%= events[i].eventName %></a>
+                  <span><%= events[i].startDate.toDateString() %></span>
+                </p>
+                <% } %>
+                <% } else { %>
+                <p class="mb-0">
+                  No promotions yet!
+                </p>
+                <% } %>
               </div>
             </div>
           </div>
@@ -25,15 +37,18 @@
             </div>
             <div class="card-body">
               <div class="text-center">
+                <% if (promos.length) { %>
                 <% for (let i = 0; i < promos.length; i++) { %>
                 <p class="mb-0">
                   <a href="/promos/<%= promos[i].promoName %>"><img src="<%= promos[i].promoImage %>" class="rounded-circle" style="height:5rem;width:5rem;"></a> 
                   <a href="/promos/<%= promos[i].promoName %>"><%= promos[i].promoName %></a>
                 </p>
                 <% } %>
+                <% } else { %>
                 <p class="mb-0">
-                  <a target="_blank" rel="nofollow" href="#">Promotions Appear Here</a>
+                  No promotions yet!
                 </p>
+                <% } %>
               </div>
             </div>
           </div>
@@ -46,13 +61,16 @@
                 <h6 class="m-0 font-weight-bold text-primary">Newest Updates From Your Follows</h6>
                 <% if (user.isWrestler || user.isOwner || user.isAdmin) { %>
                 <div>
-                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-address-card fa-sm text-white"></i> Create New Post</a>
-                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-calendar-plus fa-sm text-white"></i> Create New Event</a>
+                <a href="/posts/createPost" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-address-card fa-sm text-white"></i> Create New Post</a>
+                <% if (user.isOwner || user.isAdmin) { %>
+                <a href="/events/createEvent" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-calendar-plus fa-sm text-white"></i> Create New Event</a>
                 </div>
+                <% } %>
                 <% } %>
               </div>
             </div>
             <div class="card-body">
+              <% if (posts.length) { %>
               <% for (let i = 0; i < posts.length; i++) { %>
               <div class="card mb-3">
                 <div class="card-body">
@@ -75,6 +93,11 @@
                   <p class="mb-0"><%= posts[i].createdAt.toUTCString() %></p>
                 </div>
               </div>
+              <% } %>
+              <% } else { %>
+              <p class="mb-0">
+                Your feed is currently empty. Follow some promotions and wrestlers to populate it!
+              </p>
               <% } %>
             </div>
           </div>

@@ -4,10 +4,8 @@
         <ul class="row list-unstyled">
           <% for (let i = 0; i < wrestlers.length; i++) { %>
           <li class="col-6 justify-content-between mt-5">
-            <a href="/wrestlers/<%= wrestlers[i].proName %>">
-              <img src="<%= wrestlers[i].proImage %>" class="rounded-circle" style="height:5rem;width:5rem;">
-              <%= wrestlers[i].proName %>
-            </a>
+            <a href="/wrestlers/<%= wrestlers[i].proName %>"><img src="<%= wrestlers[i].proImage %>" class="rounded-circle" style="height:5rem;width:5rem;"></a>
+            <a href="/wrestlers/<%= wrestlers[i].proName %>"><%= wrestlers[i].proName %></a>
           </li>
           <% } %>
         </ul>

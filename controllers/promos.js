@@ -43,7 +43,7 @@ module.exports = {
   },
   promoFollow: async (req, res) => {
     try {
-      const promo = await Promo.findOne({ promoName: req.params.name });
+      const promo = await Promotion.findOne({ promoName: req.params.name });
       const isFollowing = req.user.followedPromos.some(ele => ele._id.toString() === promo.id);
 
       if (!isFollowing) {
@@ -71,8 +71,9 @@ module.exports = {
   getOwner: async (req, res) => {
     try {
       const owner = await User.findOne({ proName: req.params.name });
-      const isFollowing = req.user.followedPromos.some(ele => ele._id.toString() === owner.id);
-      res.render("promos/owner.ejs", { isFollowing: isFollowing, owner: owner, user: req.user });
+      const promos = await Promotion.find({ roster: { $in: owner.id } }).lean();
+      const isFollowing = req.user.followedUsers.some(ele => ele._id.toString() === owner.id);
+      res.render("promos/owner.ejs", { isFollowing: isFollowing, promos: promos, owner: owner, user: req.user });
     } catch (err) {
       console.log(err);
     }
