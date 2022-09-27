@@ -1,49 +1,137 @@
 <%- include('../partials/header') -%>
-    <div class="container">
-      <div class="row mt-5">
-        <div class="col-6">
-          <div>
-            <% if (locals.messages.errors) { %> <% messages.errors.forEach(el => { %>
-            <div class="alert alert-danger"><%= el.msg %></div>
-            <% }) %> <% } %>
-            <% if (locals.messages.info) { %> <% messages.info.forEach(el => { %>
-            <div class="alert alert-info"><%= el.msg %></div>
-            <% }) %> <% } %>
-            <p><strong>User Name</strong>: <%= profileUser.userName %></p>
-            <% if (profileUser.userImage) { %>
-              <img class="w-25" src="<%= profileUser.userImage %>">
-            <% } %>
-            <% if (profileUser.id === user.id) { %>
-            <p><strong>Email</strong>: <%= profileUser.email %></p>
-            <form action="/profile/avatar?_method=PUT" enctype="multipart/form-data" method="POST">
-              <div class="mb-3">
-                <label for="imgUpload" class="form-label">Upload avatar:</label>
-                <input type="file" class="form-control" id="imageUpload" name="file" accept="image/png, image/jpeg, image/gif">
+    <!-- new code -->
+    <div class="container-fluid">
+      <br>
+      <!-- Content Row -->
+      <div class="row">
+        <!-- Spacer Column -->
+        <div class="col-lg-1"></div>
+        <div class="col-lg-4 mb-4">
+          <!-- User Info -->
+          <div class="card mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">User Info</h6>
+            </div>
+            <div class="card-body">
+              <div class="text-center">
+                <div>
+                  <% if (locals.messages.errors) { %> <% messages.errors.forEach(el => { %>
+                  <div class="alert alert-danger"><%= el.msg %></div>
+                  <% }) %> <% } %>
+                  <% if (locals.messages.info) { %> <% messages.info.forEach(el => { %>
+                  <div class="alert alert-info"><%= el.msg %></div>
+                  <% }) %> <% } %>
+                  <p><strong>User Name</strong>: <%= profileUser.userName %></p>
+                  <% if (profileUser.userImage) { %>
+                  <p><img class="img-fluid" src="<%= profileUser.userImage %>"></p>
+                  <% } %>
+                  <% if (profileUser.id === user.id) { %>
+                  <p><strong>Email</strong>: <%= profileUser.email %></p>
+                  <hr class="bg-secondary">
+                  <form action="/profile/avatar?_method=PUT" enctype="multipart/form-data" method="POST">
+                    <div class="mb-3">
+                      <label for="imgUpload" class="form-label">Upload new avatar:</label>
+                      <input type="file" class="form-control" id="imageUpload" name="file" accept="image/png, image/jpeg, image/gif">
+                    </div>
+                    <button type="submit" class="btn btn-primary" value="Upload">Submit</button>
+                  </form>
+                  <% } %>
+                </div>
               </div>
-              <button type="submit" class="btn btn-primary" value="Upload">Submit</button>
-            </form>
-            <% } %>
+            </div>
           </div>
         </div>
-        <div class="col-6">
-          <ul class="row list-unstyled">
-            <% for (let i = 0; i < posts.length; i++) { %>
-            <li class="col-6 justify-content-between mt-5">
-              <a href="/post/<%= posts[i]._id %>">
-                <img class="img-fluid" src="<%= posts[i].image %>">
-              </a>
-            </li>
-            <% } %>
-          </ul>
-          <div class="row justify-content-center mt-5">
-            <a class="btn btn-primary" href="/feed">Return to Feed</a>
-            <% if (user.isAdmin && profileUser.id === user.id) { %>
-            <a class="btn btn-primary" href="/admin/add/promo">Manage Promos</a>
-            <a class="btn btn-primary" href="/admin/add/owner">Manage Owners</a>
-            <a class="btn btn-primary" href="/admin/add/wrestler">Manage Wrestlers</a>
-            <% } %>
+        <div class="col-lg-6 mb-4">
+          <!-- User Recent Activity -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <div class="d-sm-flex align-items-center justify-content-between mb-0">
+                <h6 class="m-0 font-weight-bold text-primary">Recent Activity</h6>
+                <% if (user.isWrestler || user.isOwner || user.isAdmin) { %>
+                <div>
+                <a href="/posts/createPost" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-address-card fa-sm text-white"></i> Create New Post</a>
+                <% if (user.isOwner || user.isAdmin) { %>
+                <a href="/events/createEvent" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-calendar-plus fa-sm text-white"></i> Create New Event</a>
+                </div>
+                <% } %>
+                <% } %>
+              </div>
+            </div>
+            <div class="card-body">
+              <% if (feed.length) { %>
+              <% for (let i = 0; i < feed.length; i++) { %>
+              <div class="card mb-3">
+                <div class="card-body">
+                  <% if (feed[i].title) { %>
+                  <p>
+                    <% if (feed[i].userImage) { %>
+                      <a class="me-2"><img src="<%= feed[i].userImage %>" class="rounded-circle" style="height:5rem;width:5rem;"></a>
+                    <% } else { %>
+                      <a class="me-2"><img src="/img/undraw_profile.svg" style="height:5rem;width:5rem;"></a>
+                    <% } %>
+                    <a href="/profile/<%= feed[i].userName %>"><%= feed[i].userName %></a>
+                  </p>
+                  <p class="fw-bold"><a href="/posts/<%= feed[i]._id %>"><%= feed[i].title %></a></p>
+                  <hr>
+                  <% if (feed[i].postImage) { %>
+                  <a href="/posts/<%= feed[i]._id %>"><img class="img-fluid" src="<%= feed[i].postImage %>"></a>
+                  <p></p>
+                  <% } %>
+                  <p><%= feed[i].text %></p>
+                  <hr>
+                  <span class="mb-0 d-flex flex-wrap justify-content-between">
+                    <span><%= feed[i].createdAt.toUTCString() %></span>
+                    <% if (feed[i].userId == user.id) { %>
+                    <form
+                      action="/posts/deletePost/<%= feed[i].id %>?_method=DELETE"
+                      method="POST"
+                      class="d-inline"
+                    >
+                      <button class="btn btn-primary fa fa-trash" type="submit"></button>
+                    </form>
+                    <% } %>
+                  </span>
+                  <% } else { %>
+                  <span class="d-flex flex-wrap justify-content-between mt-0">
+                    <span>
+                      <%= feed[i].userName %> 
+                      <% if (feed[i].postId) { %>
+                      <a href="/posts/<%= feed[i].postId %>">said</a>: 
+                      <% } else if (feed[i].eventId) { %>
+                      <a href="events/<%= feed[i].eventId %>">said</a>: 
+                      <% } %>
+                      "<%= feed[i].text %>"
+                    </span>
+                    <% if (feed[i].userId == user.id) { %>
+                    <form
+                      action="/comments/deleteComment/<%= feed[i]._id %>?_method=DELETE"
+                      method="POST"
+                      class="d-inline"
+                    >
+                      <button class="btn btn-primary fa fa-trash" type="submit"></button>
+                    </form>
+                    <% } %>
+                  </span>
+                <% } %>
+                </div>
+              </div>
+              <% } %>
+              <% } else { %>
+              <p class="mb-0">
+                No recent activity!
+              </p>
+              <% } %>
+            </div>
           </div>
+          <% if (user.isAdmin && profileUser.id === user.id) { %>
+          <div>
+          <a href="/admin/add/promo" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-edit fa-sm text-white"></i> Manage Promos</a>
+          <a href="/admin/add/owner" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-user-edit fa-sm text-white"></i> Manage Owners</a>
+          <a href="/admin/add/wrestler" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-user-edit fa-sm text-white"></i> Manage Wrestlers</a>
+          </div>
+          <% } %>
         </div>
+        <div class="col-lg-1"></div>
       </div>
     </div>
 <%- include('../partials/footer') -%>

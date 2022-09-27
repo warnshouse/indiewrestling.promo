@@ -4,7 +4,7 @@
       <br>
       <!-- Content Row -->
       <div class="row">
-        <!-- Content Column -->
+        <!-- Spacer Column -->
         <div class="col-lg-1"></div>
         <div class="col-lg-4 mb-4">
           <!-- Upcoming Events -->
@@ -24,7 +24,7 @@
                 <% } %>
                 <% } else { %>
                 <p class="mb-0">
-                  No promotions yet!
+                  No events yet!
                 </p>
                 <% } %>
               </div>
@@ -70,27 +70,43 @@
               </div>
             </div>
             <div class="card-body">
-              <% if (posts.length) { %>
-              <% for (let i = 0; i < posts.length; i++) { %>
+              <% if (feed.length) { %>
+              <% for (let i = 0; i < feed.length; i++) { %>
               <div class="card mb-3">
                 <div class="card-body">
+                  <% if (feed[i].title) { %>
                   <p>
-                    <% if (posts[i].userImage) { %>
-                      <a class="me-2"><img src="<%= posts[i].userImage %>" class="rounded-circle" style="height:5rem;width:5rem;"></a>
+                    <% if (feed[i].userImage) { %>
+                    <a class="me-2"><img src="<%= feed[i].userImage %>" class="rounded-circle" style="height:5rem;width:5rem;"></a>
                     <% } else { %>
-                      <a class="me-2"><img src="/img/undraw_profile.svg" style="height:5rem;width:5rem;"></a>
+                    <a class="me-2"><img src="/img/undraw_profile.svg" style="height:5rem;width:5rem;"></a>
                     <% } %>
-                    <a href="/profile/<%= posts[i].userName %>"><%= posts[i].userName %></a>
+                    <a href="/profile/<%= feed[i].userName %>"><%= feed[i].userName %></a>
                   </p>
-                  <p class="fw-bold"><a href="/posts/<%= posts[i]._id %>"><%= posts[i].title %></a></p>
+                  <p class="fw-bold"><a href="/posts/<%= feed[i]._id %>"><%= feed[i].title %></a></p>
                   <hr>
-                  <% if (posts[i].postImage) { %>
-                  <a href="/posts/<%= posts[i]._id %>"><img class="img-fluid" src="<%= posts[i].postImage %>"></a>
+                  <% if (feed[i].postImage) { %>
+                  <a href="/posts/<%= feed[i]._id %>"><img class="img-fluid" src="<%= feed[i].postImage %>"></a>
                   <p></p>
                   <% } %>
-                  <p><%= posts[i].text %></p>
+                  <p><%= feed[i].text %></p>
                   <hr>
-                  <p class="mb-0"><%= posts[i].createdAt.toUTCString() %></p>
+                  <p class="mb-0"><%= feed[i].createdAt.toUTCString() %></p>
+                  <% } else { %>
+                  <p>
+                    <a href="/promos/<%= feed[i].promoName %>"><%= feed[i].promoName %></a>
+                  </p>
+                  <p class="fw-bold"><a href="/events/<%= feed[i].eventName %>"><%= feed[i].eventName %></a></p>
+                  <hr>
+                  <a href="/posts/<%= feed[i].eventName %>"><img class="img-fluid" src="<%= feed[i].eventImage %>"></a>
+                  <p></p>
+                  <p>Event start time: <%= feed[i].startDate.toUTCString() %></p>
+                  <p><%= feed[i].streetAddress %>, <%= feed[i].city %>, <%= feed[i].state %> <%= feed[i].zip %></p>
+                  <p><%= feed[i].description %></p>
+                  <hr>
+                  <p class="mb-0"><%= feed[i].createdAt.toUTCString() %></p>
+                  
+                  <% } %>
                 </div>
               </div>
               <% } %>
@@ -105,5 +121,4 @@
         <div class="col-lg-1"></div>
       </div>
     </div>
-  <!-- /.container-fluid -->
 <%- include('../partials/footer') -%>

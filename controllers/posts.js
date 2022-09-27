@@ -10,8 +10,23 @@ const Event = require("../models/Event");
 module.exports = {
   getOwnProfile: async (req, res) => {
     try {
-      const posts = await Post.find({ userId: req.user.id });
-      res.render("main/profile.ejs", { posts: posts, profileUser: req.user, user: req.user });
+      const posts = await Post.find({ userId: req.user.id }).lean();
+      const comments = await Comment.find({ userId: req.user.id }).lean();
+      const feed = posts.concat(comments).sort((a, b) => {
+        const keyA = new Date(a.createdAt);
+        const keyB = new Date(b.createdAt);
+
+        if (keyA < keyB) {
+          return 1;
+        }
+        else if (keyA > keyB) {
+          return -1;
+        }
+        else {
+          return 0;
+        }
+      });
+      res.render("main/profile.ejs", { feed: feed, profileUser: req.user, user: req.user });
     } catch (err) {
       console.log(err);
     }
@@ -20,12 +35,14 @@ module.exports = {
     try {
       const queriedUser = await User.findOne({ userName: { $regex : new RegExp(req.params.username, "i") } });
       if (queriedUser.isFan) {
-        const posts = await Post.find({ userId: queriedUser.id });
-        const isFollowing = req.user.followedUsers.some(ele => ele._id.toString() === queriedUser.id);
-        res.render("main/profile.ejs", { isFollowing: isFollowing, posts: posts, profileUser: queriedUser, user: req.user });
+        const feed = await Comment.find({ userId: queriedUser.id }).sort({ createdAt: "desc" }).lean();
+        res.render("main/profile.ejs", { feed: feed, profileUser: queriedUser, user: req.user });
       }
       else if (queriedUser.isWrestler) {
-        res.redirect(`/wrestlers/${queriedUser.ringName}`);
+        res.redirect(`/wrestlers/${queriedUser.proName}`);
+      }
+      else if (queriedUser.isOwner) {
+        res.redirect(`/promos/owners/${queriedUser.proName}`);
       }
     } catch (err) {
       console.log(err);
@@ -63,10 +80,25 @@ module.exports = {
   },
   getFeed: async (req, res) => {
     try {
-      const posts = await Post.find({ $or: [ { userId: { $in: req.user.followedUsers } }, { promoId : { $in: req.user.followedPromos } } ] }).sort({ createdAt: "desc" }).lean();
+      const followedPosts = await Post.find({ $or: [ { userId: { $in: req.user.followedUsers } }, { promoId : { $in: req.user.followedPromos } } ] }).lean();
+      const followedEvents = await Event.find({ promoId: { $in: req.user.followedPromos } }).lean();
+      const feed = followedPosts.concat(followedEvents).sort((a, b) => {
+        const keyA = new Date(a.createdAt);
+        const keyB = new Date(b.createdAt);
+
+        if (keyA < keyB) {
+          return 1;
+        }
+        else if (keyA > keyB) {
+          return -1;
+        }
+        else {
+          return 0;
+        }
+      });
       const promos = await Promotion.find().sort({ joinDate: "asc" }).limit(5).lean();
-      const events = await Event.find({ startDate: { $gte : new Date() } }).sort({ startDate: "desc" }).lean();
-      res.render("main/feed.ejs", { events: events, posts: posts, promos: promos, user: req.user });
+      const events = await Event.find({ startDate: { $gte : new Date() } }).sort({ startDate: "desc" }).limit(5).lean();
+      res.render("main/feed.ejs", { events: events, feed: feed, promos: promos, user: req.user });
     } catch (err) {
       console.log(err);
     }

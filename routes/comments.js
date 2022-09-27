@@ -4,7 +4,8 @@ const commentsController = require("../controllers/comments");
 const authMiddleware = require("../middleware/auth");
 
 //Comment Routes - simplified for now
-router.post("/createComment/:id", authMiddleware.ensureAuth, commentsController.createComment);
+router.post("/createEventComment/:id", authMiddleware.ensureAuth, commentsController.createEventComment);
+router.post("/createPostComment/:id", authMiddleware.ensureAuth, commentsController.createPostComment);
 router.delete("/deleteComment/:id", authMiddleware.ensureAuth, commentsController.deleteComment);
 
 module.exports = router;

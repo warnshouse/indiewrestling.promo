@@ -1,11 +1,25 @@
 const Comment = require("../models/Comment");
 
 module.exports = {
-  createComment: async (req, res) => {
+  createPostComment: async (req, res) => {
     try {
       await Comment.create({
         text: req.body.comment,
-        originId: req.params.id,
+        postId: req.params.id,
+        userId: req.user.id,
+        userName: req.user.userName
+      });
+      console.log("Comment has been added!");
+      res.redirect("back");
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  createEventComment: async (req, res) => {
+    try {
+      await Comment.create({
+        text: req.body.comment,
+        eventId: req.params.id,
         userId: req.user.id,
         userName: req.user.userName
       });

@@ -27,15 +27,12 @@
           </p>
           <p>Start time: <%= event.startDate.toUTCString() %></p>
           <p>
-            Participants: 
-            <% for (let i = 0; i < event.participants.length; i++) { %>
-            <%= event.participants[i] %>
-            <% } %>
+            Participants: <%= event.participants %>
           </p>
         </div>
         <div class="mt-5">
           <h2>Add a comment</h2>
-          <form action="/comments/createComment/<%= event.id %>" method="POST">
+          <form action="/comments/createEventComment/<%= event.id %>" method="POST">
             <div class="mb-3">
               <label for="comment" class="form-label">Comment:</label>
               <input type="text" class="form-control" id="comment" name="comment">

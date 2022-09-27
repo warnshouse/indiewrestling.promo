@@ -11,7 +11,7 @@ const EventSchema = new mongoose.Schema({
   eventImage: { type: String, required: false },
   cloudinaryId: { type: String, required: false },
   participants: { type: String, required: false },
-  promoId: { type: ObjectId, ref: "User" },
+  promoId: { type: ObjectId, ref: "Promotion" },
   promoName: { type: String, required: true },
   startDate: { type: Date, required: true },
   postedBy: { type: ObjectId, ref: "User" },

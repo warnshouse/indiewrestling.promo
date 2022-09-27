@@ -1,8 +1,7 @@
 <%- include('../partials/header') -%>
     <div class="container">
-      <div class="row justify-content-center mt-5">
-        <div class="col-6">
-          <h2><%= post.title %></h2>
+      <div class="row justify-content-center">
+        <div class="col-8 mt-4">
           <h3>
             <% if (post.userImage) { %>
               <a href="/profile/<%= post.userName %>"><img src="<%= post.userImage %>" class="rounded-circle" style="height:5rem;width:5rem;"></a>
@@ -11,7 +10,11 @@
             <% } %>
             <a href="/profile/<%= post.userName %>"><%= post.userName %></a>
           </h3>
-          <a href="<%= post.postImage %>"><img class="img-fluid" src="<%= post.postImage %>"></a>
+          <h2><%= post.title %></h2>
+          <p><a href="<%= post.postImage %>"><img class="img-fluid" src="<%= post.postImage %>"></a>
+          <p><%= post.text %></p>
+          <hr>
+          <p><%= post.createdAt.toUTCString() %></p>
           <div class="row justify-content-between">
             <% if (post.userId == user.id) { %>
             <form
@@ -23,39 +26,37 @@
             </form>
             <% } %>
           </div>
-        </div>
-        <div class="col-3 mt-5">
-          <p><%= post.text %></p>
-        </div>
-        <div class="mt-5">
-          <h2>Add a comment</h2>
-          <form action="/comments/createComment/<%= post.id %>" method="POST">
-            <div class="mb-3">
-              <label for="comment" class="form-label">Comment:</label>
-              <input type="text" class="form-control" id="comment" name="comment">
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
-        </div>
-        <ul>
-          <% for (let i = 0; i < comments.length; i++) { %>
-          <li class="col-6 justify-content-between mt-5">
-            <a href="/profile/<%= comments[i].userName %>"><%= comments[i].userName %></a> says: "<%= comments[i].text %>"
-            <% if (comments[i].userId == user.id) { %>
-            <form
-              action="/comments/deleteComment/<%= comments[i]._id %>?_method=DELETE"
-              method="POST"
-              class="col-3"
-            >
-              <button class="btn btn-primary fa fa-trash" type="submit"></button>
+          <br>
+          <div>
+            <h2>Add a comment</h2>
+            <form action="/comments/createPostComment/<%= post.id %>" method="POST">
+              <div class="mb-3">
+                <label for="comment" class="form-label">Comment:</label>
+                <input type="text" class="form-control" id="comment" name="comment">
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
             </form>
-            <% } %>
-          </li>
-          <% } %>
-        </ul>
-        <div class="col-6 mt-5">
-          <a class="btn btn-primary" href="/profile">Return to Profile</a>
-          <a class="btn btn-primary" href="/feed">Return to Feed</a>
+            <br>
+            <% for (let i = 0; i < comments.length; i++) { %>
+            <div class="card-body d-flex flex-wrap justify-content-between px-0 pt-0">
+              <span>
+                <a href="/profile/<%= comments[i].userName %>"><%= comments[i].userName %></a> says: "<%= comments[i].text %>"
+              </span>
+              <span>
+                <span><%= comments[i].createdAt.toUTCString() %></span>
+                <% if (comments[i].userId == user.id) { %>
+                <form
+                  action="/comments/deleteComment/<%= comments[i]._id %>?_method=DELETE"
+                  method="POST"
+                  class="d-inline"
+                >
+                  <button class="btn btn-primary fa fa-trash" type="submit"></button>
+                </form>
+                <% } %>
+              </span>
+            </div>
+            <% } %>            
+          </div>
         </div>
       </div>
     </div>

@@ -17,7 +17,7 @@ module.exports = {
   getEvent: async (req, res) => {
     try {
       const event = await Event.findOne({ eventName: req.params.name });
-      const comments = await Comment.find({ originId: event.id }).sort({ createdAt: "asc" }).lean();
+      const comments = await Comment.find({ eventId: event.id }).sort({ createdAt: "asc" }).lean();
       res.render("events/event.ejs", { comments: comments, event: event, user: req.user });
     } catch (err) {
       console.log(err);
