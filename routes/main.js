@@ -8,6 +8,8 @@ const authMiddleware = require("../middleware/auth");
 
 //Main Routes - simplified for now
 router.get("/", authMiddleware.ensureGuest, homeController.getIndex);
+router.get("/pp", homeController.getPP);
+router.get("/tou", homeController.getTOU);
 router.get("/profile", authMiddleware.ensureAuth, postsController.getOwnProfile);
 router.get("/profile/:username", authMiddleware.ensureAuth, postsController.getUserProfile);
 router.put("/profile/avatar", upload.single("file"), postsController.putAvatar);
